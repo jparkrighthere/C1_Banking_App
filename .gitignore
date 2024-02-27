@@ -17,6 +17,7 @@
 !/client/.vscode/extensions.json
 /client/.idea
 .DS_Store
+node_modules
 /client/*.suo
 /client/*.ntvs*
 /client/*.njsproj
