@@ -46,7 +46,7 @@ grpcio-tools==1.60.1
 h11==0.14.0
 idna==3.4
 ipykernel==6.19.4
-ipython==8.8.0
+ipython==8.10.0
 isoduration==20.11.0
 jedi==0.18.2
 Jinja2==3.1.3
