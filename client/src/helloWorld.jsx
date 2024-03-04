@@ -5,11 +5,12 @@ function HelloWorld() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:8000/hello-world/')
-      .then(response => {
+    axios
+      .get('/api/hello')
+      .then((response) => {
         setMessage(response.data.message);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   }, []);

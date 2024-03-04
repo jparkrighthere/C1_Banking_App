@@ -17,6 +17,8 @@
 !/client/.vscode/extensions.json
 /client/.idea
 .DS_Store
+/server/.venv
+/server/__pycache__
 /client/*.suo
 /client/*.ntvs*
 /client/*.njsproj
