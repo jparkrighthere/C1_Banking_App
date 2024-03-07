@@ -8,6 +8,11 @@ import logging
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from pymongo import MongoClient
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 from plaid.api import plaid_api
 from plaid.model.products import Products
@@ -27,6 +32,7 @@ PLAID_SECRET = os.getenv('PLAID_SANDBOX_API_KEY')
 PLAID_COUNTRY_CODES = os.getenv('PLAID_COUNTRY_CODES', 'US').split(',')
 PLAID_PRODUCTS = os.getenv('PLAID_PRODUCTS', 'transactions').split(',')
 PLAID_REDIRECT_URI = os.getenv('PLAID_REDIRECT_URI')
+mongo_uri = os.getenv('MONGO_DB_URI')
 
 host = plaid.Environment.Sandbox
 configuration = plaid.Configuration(
@@ -40,7 +46,7 @@ configuration = plaid.Configuration(
 
 api_client = plaid.ApiClient(configuration)
 
-client = plaid_api.PlaidApi(api_client)
+plaid_client = plaid_api.PlaidApi(api_client)
 
 products = []
 for product in PLAID_PRODUCTS:
@@ -50,6 +56,14 @@ access_token = None
 transfer_id = None
 
 item_id = None
+
+mongo_client = MongoClient(mongo_uri)
+
+try:
+    mongo_client.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+except Exception as e:
+    print(e)
 
 @app.route('/api/info', methods=['POST'])
 def info():
@@ -78,7 +92,7 @@ def create_link_token():
         if PLAID_REDIRECT_URI != None:
             request['redirect_uri'] = PLAID_REDIRECT_URI
     # create link token
-        response = client.link_token_create(request)
+        response = plaid_client.link_token_create(request)
         
         return jsonify(response.to_dict())
     except plaid.ApiException as e:
@@ -94,7 +108,7 @@ def get_access_token():
     try:
         exchange_request = ItemPublicTokenExchangeRequest(
             public_token=public_token)
-        exchange_response = client.item_public_token_exchange(exchange_request)
+        exchange_response = plaid_client.item_public_token_exchange(exchange_request)
         access_token = exchange_response['access_token']
         item_id = exchange_response['item_id']
         return jsonify(exchange_response.to_dict())
