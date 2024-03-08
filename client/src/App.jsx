@@ -1,5 +1,5 @@
 import { useEffect, useContext, useCallback } from "react";
-import Context from "./Context";
+import Context, { QuickstartProvider } from "./Context";
 import Link from "./components/Link";
 
 const App = () => {
@@ -72,13 +72,20 @@ const App = () => {
   return (
     <div>
       <div>
-        {linkSuccess && isPaymentInitiation && isItemAccess}
-            {/* {isPaymentInitiation}
-            {isItemAccess} */}
-            <Link />
+        {linkSuccess && isPaymentInitiation && isItemAccess && (
+          <Link />
+        )}
       </div>
     </div>
   );
 };
 
-export default App;
+// const AppWithProvider = () => {
+//   return (
+//     <QuickstartProvider>
+//       <App />
+//     </QuickstartProvider>
+//   );
+// };
+
+// export default AppWithProvider;
