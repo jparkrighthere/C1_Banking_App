@@ -39,9 +39,6 @@ const App = () => {
     onSuccess,
   };
 
-  //config.receivedRedirectUri = window.location.href;
-  isOauth = true;
-
   // For OAuth, configure the received redirect URI
   if (window.location.href.includes("?oauth_state_id=")) {
     config.receivedRedirectUri = window.location.href;
