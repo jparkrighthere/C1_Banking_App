@@ -5,14 +5,18 @@ const App = () => {
   const [linkToken, setToken] = useState(null);
 
   // Set access token
-  const OnSuccess = useCallback(async (publicToken) => {
-    await fetch("/api/set_access_token", {
+  const onSuccess = useCallback(async (publicToken) => {
+    const response = await fetch("/api/set_access_token", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+ 
       body: JSON.stringify({ public_token: publicToken }),
     });
+    const data = response.json()
+    console.log(data);
+
   }, []);
 
   // Creates a Link token
@@ -31,12 +35,11 @@ const App = () => {
   let isOauth = false;
 
   const config = {
-    linkToken,
-    OnSuccess,
+    token:linkToken,
+    onSuccess,
   };
 
-  console.log(window.location.href);
-  config.receivedRedirectUri = window.location.href;
+  //config.receivedRedirectUri = window.location.href;
   isOauth = true;
 
   // For OAuth, configure the received redirect URI
