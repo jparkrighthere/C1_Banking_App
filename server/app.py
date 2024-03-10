@@ -1,14 +1,10 @@
-from plaid.model.country_code import CountryCode
-from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchangeRequest
-from plaid.model.link_token_create_request_user import LinkTokenCreateRequestUser
-from plaid.model.link_token_create_request import LinkTokenCreateRequest
-from plaid.model.products import Products
-from plaid.api import plaid_api
+
 import json
 import time
 import plaid
 import os
 import logging
+import os
 
 
 from dotenv import load_dotenv
@@ -16,10 +12,18 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from pymongo import MongoClient
 from dotenv import load_dotenv
-import os
+
+
+
+from plaid.model.country_code import CountryCode
+from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchangeRequest
+from plaid.model.link_token_create_request_user import LinkTokenCreateRequestUser
+from plaid.model.link_token_create_request import LinkTokenCreateRequest
+from plaid.model.products import Products
+from plaid.api import plaid_api
+
 
 load_dotenv()
-
 
 app = Flask(__name__)
 CORS(app)
@@ -94,7 +98,6 @@ def create_link_token():
             request['redirect_uri'] = PLAID_REDIRECT_URI
     # create link token
         response = plaid_client.link_token_create(request)
-
         return jsonify(response.to_dict())
     except plaid.ApiException as e:
         return json.loads(e.body)
@@ -117,7 +120,6 @@ def get_access_token():
         return jsonify(exchange_response.to_dict())
     except plaid.ApiException as e:
         return json.loads(e.body)
-
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
