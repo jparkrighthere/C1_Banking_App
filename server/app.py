@@ -67,7 +67,7 @@ except Exception as e:
     print(e)
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def login():
     username = request.json.get('username', None)
     password = request.json.get('password', None)
@@ -92,7 +92,7 @@ def login():
     return jsonify({"error": "Error with login"}), 400
 
 
-@app.route('/register', methods=['POST'])
+@app.route('/api/register', methods=['POST'])
 def register():
     username = request.json.get('username')
     password = request.json.get('password')
