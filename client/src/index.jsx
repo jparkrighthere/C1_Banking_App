@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
+import App from './linktoken.jsx'
 import './index.css'
 import SignIn from './SignIn.jsx'
 import Register from './Register.jsx'
