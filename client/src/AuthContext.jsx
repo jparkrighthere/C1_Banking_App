@@ -1,25 +1,39 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-const AuthContext = createContext();
-
-export const useAuth = () => useContext(AuthContext);
+const AuthContext = createContext({
+  isLoggedIn: false, // Initial state
+  authToken: null,
+  login: () => {},
+  logout: () => {},
+});
 
 export const AuthProvider = ({ children }) => {
-  const [accessToken, setAccessToken] = useState(localStorage.getItem('access_token') || null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authToken, setAuthToken] = useState(null);
 
-  const setToken = (token) => {
+  useEffect(() => {
+    const storedToken = localStorage.getItem('access_token');
+    if (storedToken) {
+      setIsLoggedIn(true);
+      setAuthToken(storedToken);
+    }
+  }, []);
+
+  const login = (token) => {
     localStorage.setItem('access_token', token);
-    setAccessToken(token);
+    setIsLoggedIn(true);
+    setAuthToken(token);
   };
 
   const logout = () => {
     localStorage.removeItem('access_token');
-    setAccessToken(null);
+    setIsLoggedIn(false);
+    setAuthToken(null);
   };
 
   return (
-    <AuthContext.Provider value={{ accessToken, setToken, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, authToken, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -28,3 +42,5 @@ export const AuthProvider = ({ children }) => {
 AuthProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
+
+export default AuthContext; 

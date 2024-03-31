@@ -1,26 +1,49 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './linktoken.jsx';
 import './index.css';
 import SignIn from './SignIn.jsx';
 import Register from './Register.jsx';
-import { AuthProvider } from './AuthContext';
+import AuthContext,{ AuthProvider } from './AuthContext';
 import {
   BrowserRouter as Router,
   Routes,
-  Route
+  Route,
+  Navigate, // For protecting routes
 } from "react-router-dom";
+import PropTypes from 'prop-types';
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-<React.StrictMode>
-    <Router>
+const Index = () => {
+  return (
+    <React.StrictMode>
       <AuthProvider>
-        <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/signin" element={<SignIn />} />
-        </Routes>
+        <Router>
+          <Routes>
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/register" element={<Register />} />
+            <Route
+              path="/"
+              element={
+                <RequireAuth>
+                  <App />  
+                </RequireAuth>
+              } 
+            /> 
+          </Routes>
+        </Router>
       </AuthProvider>
-    </Router>
-  </React.StrictMode>,
-);
+    </React.StrictMode>
+  )
+};
+
+// Simple component to protect routes
+const RequireAuth = ({ children }) => {
+  const { isLoggedIn } = useContext(AuthContext);
+  return isLoggedIn ? children : <Navigate to="/signin" replace />;
+};
+
+RequireAuth.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Index />);
