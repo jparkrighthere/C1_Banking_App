@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import './Form.css';
+import AuthContext from './AuthContext';
 
 const SignIn = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const { login } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -42,6 +44,7 @@ const SignIn = () => {
         const { access_token } = responseData;
         localStorage.setItem('access_token', access_token);
         console.log('Login successful. Access token:', access_token);
+        login(access_token);
         navigate("/");
     } catch (error) {
         console.error('Login failed: ', error.message);

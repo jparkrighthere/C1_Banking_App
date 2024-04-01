@@ -9,7 +9,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate, // For protecting routes
+  Navigate,
 } from "react-router-dom";
 import PropTypes from 'prop-types';
 
@@ -21,9 +21,7 @@ const Index = () => {
           <Routes>
             <Route path="/signin" element={<SignIn />} />
             <Route path="/register" element={<Register />} />
-            <Route
-              path="/"
-              element={
+            <Route path="/" element={
                 <RequireAuth>
                   <App />  
                 </RequireAuth>
@@ -36,7 +34,7 @@ const Index = () => {
   )
 };
 
-// Simple component to protect routes
+// To protect routes
 const RequireAuth = ({ children }) => {
   const { isLoggedIn } = useContext(AuthContext);
   return isLoggedIn ? children : <Navigate to="/signin" replace />;
