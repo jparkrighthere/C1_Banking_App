@@ -47,6 +47,7 @@ const Register = () => {
         const responseData = await response.json();
         const { access_token } = responseData;
         localStorage.setItem('access_token', access_token);
+        // Handle successful registration, e.g., store access token in local storage
         console.log('Registration successful. Access token:', access_token);
         navigate("/");
     } catch (error) {

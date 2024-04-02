@@ -149,7 +149,7 @@ def create_link_token():
 
 
 @app.route('/api/set_access_token', methods=['POST'])
-# @jwt_required()
+@jwt_required()
 def get_access_token():
     global access_token
     global item_id
