@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import './Form.css';
+import AuthContext from './AuthContext';
 
 const SignIn = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const { login } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -40,8 +42,9 @@ const SignIn = () => {
         
         const responseData = await response.json();
         const { access_token } = responseData;
-        // Handle successful registration, e.g., store access token in local storage
+        localStorage.setItem('access_token', access_token);
         console.log('Login successful. Access token:', access_token);
+        login(access_token);
         navigate("/");
     } catch (error) {
         console.error('Login failed: ', error.message);
@@ -71,7 +74,7 @@ const SignIn = () => {
             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
             <button type="submit">Sign In</button>
         </form>
-        <p>Don't have an account? <Link to="/register">Register Here</Link></p>
+        <p>Don&apos;t have an account? <Link to="/register">Register Here</Link></p>
         </div>
     </div>
   );

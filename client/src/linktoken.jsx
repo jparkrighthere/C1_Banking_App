@@ -1,9 +1,10 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useContext } from "react";
 import { usePlaidLink } from "react-plaid-link";
+import AuthContext from './AuthContext'; 
 
 const App = () => {
   const [linkToken, setToken] = useState(null);
-
+  const { isLoggedIn, logout } = useContext(AuthContext);
   // Set access token
   const onSuccess = useCallback(async (publicToken) => {
     const response = await fetch("/api/set_access_token", {
@@ -58,10 +59,10 @@ const App = () => {
 
   return (
     <div>
-      <button onClick={() => open()
-        } disabled={!ready}>
+      <button onClick={() => open()} disabled={!ready}>
         <strong>Link account</strong>
       </button>
+      {isLoggedIn && <button onClick={logout}>Logout</button>}
       <h3>This is the generated token:</h3>
       <h4>{linkToken}</h4>
     </div>
