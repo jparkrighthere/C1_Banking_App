@@ -19,7 +19,7 @@ const Index = () => {
       <AuthProvider>
         <Router>
           <Routes>
-            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signin" element={<SignIn />} /> 
             <Route path="/register" element={<Register />} />
             <Route path="/" element={
                 <RequireAuth>
@@ -36,8 +36,8 @@ const Index = () => {
 
 // To protect routes
 const RequireAuth = ({ children }) => {
-  const { isLoggedIn } = useContext(AuthContext);
-  return isLoggedIn ? children : <Navigate to="/signin" replace />;
+  const { isLoggedIn, authToken } = useContext(AuthContext);
+  return isLoggedIn && authToken !== null ? children : <Navigate to="/signin" replace />;
 };
 
 RequireAuth.propTypes = {

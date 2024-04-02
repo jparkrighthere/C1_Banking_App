@@ -58,7 +58,7 @@ const App = () => {
   }, [createLinkToken,linkToken, isOauth, ready, open]);
 
   return (
-    <div> {/* Wrapper for the buttons and link token */}
+    <div>
       <button onClick={() => open()} disabled={!ready}>
         <strong>Link account</strong>
       </button>
