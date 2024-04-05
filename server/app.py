@@ -2,6 +2,8 @@ import json
 import time
 import plaid
 import os
+import bcrypt # for password hashing
+import certifi
 from datetime import timedelta
 
 from dotenv import load_dotenv
@@ -58,7 +60,7 @@ access_token = None
 transfer_id = None
 item_id = None
 
-mongo_client = MongoClient(mongo_uri)
+mongo_client = MongoClient(mongo_uri, tlsCAFile=certifi.where())
 
 try:
     mongo_client.admin.command('ping')
@@ -66,17 +68,22 @@ try:
 except Exception as e:
     print(e)
 
+db = mongo_client["Test"] 
+collection = db.get_collection("Test") # Get the collection which will store our users (currently named Test)
+#user_id = None
+
+#def add_connected_account(user_id, access_token):
+#    user = collection.find_one({"_id": user_id})
+#    connected_accounts = user["connected_accounts"]
+#    len = len(connected_accounts)
+#    str = "account" + str(len)
+#    collection.update_one({"_id": user_id}, {"$set": {f"properties.connected-accounts.{account_id}": {"access-token": access_token, "budget": {}}}})
 
 @app.route('/api/login', methods=['POST'])
 def login():
     username = request.json.get('username', None)
     password = request.json.get('password', None)
-    if username == None or password == None:
-        return jsonify({"error": "Invalid password or username", "message": "The provided information is incorrect"}), 401
-    user_id = None
-    
-    # TODO Get user id from mongo
-    #For Saurav
+
     # 1. If Username in Mongo -> 
     #       Hash the password 
     #       if the hash equals stored hash:
@@ -85,6 +92,23 @@ def login():
     #           return jsonify({"error": "Invalid password", "message": "The provided password is incorrect"}), 401
     #    If username not in mongo -> 
     #       return jsonify({"error": "User not found", "message": "The provided username does not exist"}), 404
+
+    if username == None or password == None:
+        return jsonify({"error": "Invalid password or username", "message": "The provided information is incorrect"}), 401
+    user_id = None
+    
+    if(collection.find_one({"name": username})):
+        user = collection.find_one({"name": username})
+        salt = user["salt"]
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
+        print(hashed_password)
+        print(user["password"])
+        if(hashed_password == user["password"]):
+            user_id = user["_id"]
+        else:
+            return jsonify({"error": "Invalid password", "message": "The provided password is incorrect"}), 401
+    else:
+        return jsonify({"error": "User not found", "message": "The provided username does not exist"}), 404
     
     if user_id!=None:
         token = create_access_token(identity=user_id)
@@ -100,15 +124,30 @@ def register():
         return jsonify({"error": "Invalid password or username", "message": "The provided information is incorrect"}), 401
     user_id = None
     
-    # TODO: For Saurav Create user in MongoDB
-    # For Saurav
     # 1. If Username in Mongo:
     #       return jsonify({ "error": "User already exists","message": "The provided username is already registered"}), 409
-    #    Else
+    #    Else        
     #       Hash the password with a salt
     #       Create the mongo user object to be stored along with the unique user_id, mongo might already generate a unique id
     #       Store the user object into our database
     #       Set the User_id
+
+    if(collection.find_one({"name": username})):
+        return jsonify({ "error": "User already exists","message": "The provided username is already registered"}), 409
+
+    else:
+        salt = bcrypt.gensalt()
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
+        new_user = {
+            "_id": collection.count_documents({})+1,
+            "name": username,
+            "password": hashed_password,
+            "salt": salt,
+            "connected_accounts": {}
+        }
+        collection.insert_one(new_user)
+        user_id = new_user["_id"]
+
     
     if user_id!=None:
         token = create_access_token(identity=user_id)
@@ -163,6 +202,7 @@ def get_access_token():
         exchange_response = plaid_client.item_public_token_exchange(exchange_request)
         # TODO Store this access_token for the corresponding user in the database
         access_token = exchange_response['access_token']
+        # add_connected_account(user_id, access_token)
         item_id = exchange_response['item_id']
         return jsonify(exchange_response.to_dict())
     except plaid.ApiException as e:
