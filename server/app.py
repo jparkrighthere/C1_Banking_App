@@ -59,6 +59,7 @@ for product in PLAID_PRODUCTS:
 access_token = None
 transfer_id = None
 item_id = None
+user_id = None
 
 mongo_client = MongoClient(mongo_uri, tlsCAFile=certifi.where())
 
@@ -69,15 +70,8 @@ except Exception as e:
     print(e)
 
 db = mongo_client["Test"] 
-collection = db.get_collection("Test") # Get the collection which will store our users (currently named Test)
-#user_id = None
-
-#def add_connected_account(user_id, access_token):
-#    user = collection.find_one({"_id": user_id})
-#    connected_accounts = user["connected_accounts"]
-#    len = len(connected_accounts)
-#    str = "account" + str(len)
-#    collection.update_one({"_id": user_id}, {"$set": {f"properties.connected-accounts.{account_id}": {"access-token": access_token, "budget": {}}}})
+users = db.get_collection("Users") # Get the collection which will store our users
+connected_accounts = db.get_collection("Connected Accounts") # Get the collection which will store our connected accounts
 
 @app.route('/api/login', methods=['POST'])
 def login():
@@ -97,17 +91,15 @@ def login():
         return jsonify({"error": "Invalid password or username", "message": "The provided information is incorrect"}), 401
     user_id = None
     
-    if(collection.find_one({"name": username})):
-        user = collection.find_one({"name": username})
-        salt = user["salt"]
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
-        print(hashed_password)
-        print(user["password"])
-        if(hashed_password == user["password"]):
-            user_id = user["_id"]
-        else:
+    if(users.find_one({"name": username})): # If the user exists
+        user = users.find_one({"name": username}) # Get the user object
+        salt = user["salt"] # Get the salt
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt) # Hash the password using the associated salt
+        if(hashed_password == user["password"]): 
+            user_id = user["_id"] # Set the user id to the user id associated with the account
+        else: # If the password is incorrect
             return jsonify({"error": "Invalid password", "message": "The provided password is incorrect"}), 401
-    else:
+    else: # If the user does not exist
         return jsonify({"error": "User not found", "message": "The provided username does not exist"}), 404
     
     if user_id!=None:
@@ -132,21 +124,21 @@ def register():
     #       Store the user object into our database
     #       Set the User_id
 
-    if(collection.find_one({"name": username})):
+    if(users.find_one({"name": username})): # If the user exists
         return jsonify({ "error": "User already exists","message": "The provided username is already registered"}), 409
 
     else:
-        salt = bcrypt.gensalt()
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
-        new_user = {
-            "_id": collection.count_documents({})+1,
+        salt = bcrypt.gensalt() # Generate a salt
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt) # Hash the password using the salt
+        new_user = { # Create the user object
+            "_id": users.count_documents({})+1,
             "name": username,
             "password": hashed_password,
             "salt": salt,
             "connected_accounts": {}
         }
-        collection.insert_one(new_user)
-        user_id = new_user["_id"]
+        users.insert_one(new_user) # Store the user object in the database
+        user_id = new_user["_id"] # Get the id of the user
 
     
     if user_id!=None:
@@ -202,7 +194,27 @@ def get_access_token():
         exchange_response = plaid_client.item_public_token_exchange(exchange_request)
         # TODO Store this access_token for the corresponding user in the database
         access_token = exchange_response['access_token']
-        # add_connected_account(user_id, access_token)
+        if user_id != None: # Makes sure we have a working user id
+            new_acc = { # Create the connected account object
+                "_id": connected_accounts.count_documents({})+1,
+                "access-token": access_token,
+                "budget": { # just a default budget
+                    "food": 0.1,
+                    "personal spending": 0.1,
+                    "home": 0.1,
+                    "auto": 0.1,
+                    "insurance": 0.1,
+                    "utilities": 0.1,
+                    "transport": 0.1,
+                    "healthcare": 0.1,
+                    "savings": 0.1,
+                    "misc": 0.1
+                }
+            }
+            acc_id = new_acc["_id"] # Get the id of the connected account
+            connected_accounts.insert_one(new_acc) # Store the connected account in the database
+            users.find_one_and_update({"_id": user_id}, {"$push": {"connected_accounts": acc_id}}) # Add the connected account to the user
+        
         item_id = exchange_response['item_id']
         return jsonify(exchange_response.to_dict())
     except plaid.ApiException as e:
