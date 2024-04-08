@@ -220,5 +220,28 @@ def get_access_token():
     except plaid.ApiException as e:
         return json.loads(e.body)
 
+@app.route('/api/accounts_and_transactions', methods=['GET'])
+@jwt_required()
+def get_accounts_and_transactions():
+    global access_token
+    try:
+        #get accs
+        accounts_response = plaid_client.accounts_get(access_token)
+        accounts = accounts_response.to_dict()
+        #get associated transactions
+        for account in accounts['accounts']:
+            account_access_token = account['account_id']
+            transactions_response = plaid_client.transactions_get(
+                account_access_token,
+                start_date='2000-01-01',
+                end_date='2024-12-31',
+            )
+            account['transactions'] = transactions_response.to_dict()
+        #ret both accs and transactions
+        return jsonify(accounts=accounts)
+    except plaid.ApiException as e:
+        return json.loads(e.body)
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
