@@ -22,6 +22,7 @@ from plaid.api import plaid_api
 
 
 load_dotenv()
+
 PLAID_CLIENT_ID = os.getenv('PLAID_CLIENT_ID')
 PLAID_SECRET = os.getenv('PLAID_SANDBOX_API_KEY')
 PLAID_COUNTRY_CODES = os.getenv('PLAID_COUNTRY_CODES', 'US').split(',')
@@ -56,11 +57,6 @@ products = []
 for product in PLAID_PRODUCTS:
     products.append(Products(product))
 
-access_token = None
-transfer_id = None
-item_id = None
-user_id = None
-
 mongo_client = MongoClient(mongo_uri, tlsCAFile=certifi.where())
 
 try:
@@ -77,15 +73,6 @@ connected_accounts = db.get_collection("Connected Accounts") # Get the collectio
 def login():
     username = request.json.get('username', None)
     password = request.json.get('password', None)
-
-    # 1. If Username in Mongo -> 
-    #       Hash the password 
-    #       if the hash equals stored hash:
-    #           Set The user id
-    #       Else 
-    #           return jsonify({"error": "Invalid password", "message": "The provided password is incorrect"}), 401
-    #    If username not in mongo -> 
-    #       return jsonify({"error": "User not found", "message": "The provided username does not exist"}), 404
 
     if username == None or password == None:
         return jsonify({"error": "Invalid password or username", "message": "The provided information is incorrect"}), 401
@@ -115,14 +102,6 @@ def register():
     if username == None or password == None:
         return jsonify({"error": "Invalid password or username", "message": "The provided information is incorrect"}), 401
     user_id = None
-    
-    # 1. If Username in Mongo:
-    #       return jsonify({ "error": "User already exists","message": "The provided username is already registered"}), 409
-    #    Else        
-    #       Hash the password with a salt
-    #       Create the mongo user object to be stored along with the unique user_id, mongo might already generate a unique id
-    #       Store the user object into our database
-    #       Set the User_id
 
     if(users.find_one({"name": username})): # If the user exists
         return jsonify({ "error": "User already exists","message": "The provided username is already registered"}), 409
@@ -146,16 +125,6 @@ def register():
         return jsonify(message="User registration successful", access_token=token), 200
     return jsonify({"error": "Error with Registration"}), 400
     
-@app.route('/api/info', methods=['POST'])
-@jwt_required()
-def info():
-    global access_token
-    global item_id
-    return jsonify({
-        'item_id': item_id,
-        'access_token': access_token,
-        'products': PLAID_PRODUCTS
-    })
 
 @app.route('/api/create_link_token', methods=['POST'])
 @jwt_required()
@@ -182,9 +151,7 @@ def create_link_token():
 @app.route('/api/set_access_token', methods=['POST'])
 @jwt_required()
 def get_access_token():
-    global access_token
-    global item_id
-    global transfer_id
+    #Extract user_id from request, add item_id to user document
     data = request.get_json()
     public_token = data.get('public_token')
 
@@ -192,8 +159,10 @@ def get_access_token():
         exchange_request = ItemPublicTokenExchangeRequest(
             public_token=public_token)
         exchange_response = plaid_client.item_public_token_exchange(exchange_request)
-        # TODO Store this access_token for the corresponding user in the database
+        
+        # TODO Store the item_id for the corresponding user in the database
         access_token = exchange_response['access_token']
+        item_id = exchange_response['item_id']
         if user_id != None: # Makes sure we have a working user id
             new_acc = { # Create the connected account object
                 "_id": connected_accounts.count_documents({})+1,
@@ -214,8 +183,7 @@ def get_access_token():
             acc_id = new_acc["_id"] # Get the id of the connected account
             connected_accounts.insert_one(new_acc) # Store the connected account in the database
             users.find_one_and_update({"_id": user_id}, {"$push": {"connected_accounts": acc_id}}) # Add the connected account to the user
-        
-        item_id = exchange_response['item_id']
+    
         return jsonify(exchange_response.to_dict())
     except plaid.ApiException as e:
         return json.loads(e.body)
@@ -223,7 +191,7 @@ def get_access_token():
 @app.route('/api/accounts_and_transactions', methods=['GET'])
 @jwt_required()
 def get_accounts_and_transactions():
-    global access_token
+    #TODO Rohan, get access token from user jwt, find the user in our database, get all their account tokens, get finance info
     try:
         #get accs
         accounts_response = plaid_client.accounts_get(access_token)
