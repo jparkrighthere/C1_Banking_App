@@ -57,8 +57,8 @@ const Register = () => {
     } catch (error) {
         console.error('Registration failed: ', error.message);
     }
+    navigate("/");
     return;
-    // navigate("/");
   };
 
   return (
