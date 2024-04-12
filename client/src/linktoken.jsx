@@ -4,15 +4,16 @@ import AuthContext from './AuthContext';
 
 const App = () => {
   const [linkToken, setToken] = useState(null);
-  const { isLoggedIn, logout } = useContext(AuthContext);
+  const { isLoggedIn, logout, authToken } = useContext(AuthContext);
   // Set access token
   const onSuccess = useCallback(async (publicToken) => {
-    const response = await fetch("/api/set_access_token", {
-      method: "POST",
+    const response = await fetch('/api/set_access_token', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
+         Authorization: `Bearer ${authToken}`,
       },
- 
+
       body: JSON.stringify({ public_token: publicToken }),
     });
     const data = response.json()
@@ -26,7 +27,13 @@ const App = () => {
       const token = localStorage.getItem('link_token'); // For OAuth, use previously generated Link token
       setToken(token);
     } else {
-      const response = await fetch("/api/create_link_token", {method: "POST"});
+      const response = await fetch('/api/create_link_token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
       const data = await response.json();
       setToken(data.link_token);
       localStorage.setItem('link_token', data.link_token);
@@ -65,6 +72,19 @@ const App = () => {
       {isLoggedIn && <button onClick={logout}>Logout</button>}
       <h3>This is the generated token:</h3>
       <h4>{linkToken}</h4>
+      <button
+        onClick={() =>
+          fetch('/api/transactions', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${authToken}`,
+            },
+          }).then(res=>res.json()).then(data=>console.log(data))
+        }
+      >
+        <strong>Test</strong>
+      </button>
     </div>
   );
 };

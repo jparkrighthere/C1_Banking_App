@@ -4,7 +4,7 @@ import plaid
 import os
 import bcrypt # for password hashing
 import certifi
-from datetime import timedelta
+from datetime import datetime, date, timedelta
 
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
@@ -17,6 +17,8 @@ from plaid.model.country_code import CountryCode
 from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchangeRequest
 from plaid.model.link_token_create_request_user import LinkTokenCreateRequestUser
 from plaid.model.link_token_create_request import LinkTokenCreateRequest
+from plaid.model.transactions_get_request import TransactionsGetRequest
+from plaid.model.accounts_get_request import AccountsGetRequest
 from plaid.model.products import Products
 from plaid.api import plaid_api
 
@@ -114,7 +116,7 @@ def register():
             "name": username,
             "password": hashed_password,
             "salt": salt,
-            "connected_accounts": {}
+            "connected_accounts": []
         }
         users.insert_one(new_user) # Store the user object in the database
         user_id = new_user["_id"] # Get the id of the user
@@ -142,6 +144,7 @@ def create_link_token():
         )
         if PLAID_REDIRECT_URI != None:
             request['redirect_uri'] = PLAID_REDIRECT_URI
+            
         response = plaid_client.link_token_create(request)
         return jsonify(response.to_dict())
     except plaid.ApiException as e:
@@ -154,7 +157,7 @@ def get_access_token():
     #Extract user_id from request, add item_id to user document
     data = request.get_json()
     public_token = data.get('public_token')
-
+    user_id= get_jwt_identity()
     try:
         exchange_request = ItemPublicTokenExchangeRequest(
             public_token=public_token)
@@ -165,28 +168,76 @@ def get_access_token():
         item_id = exchange_response['item_id']
         if user_id != None: # Makes sure we have a working user id
             new_acc = { # Create the connected account object
-                "_id": connected_accounts.count_documents({})+1,
+                "_id": item_id,
                 "access-token": access_token,
-                "budget": { # just a default budget
-                    "food": 0.1,
-                    "personal spending": 0.1,
-                    "home": 0.1,
-                    "auto": 0.1,
-                    "insurance": 0.1,
-                    "utilities": 0.1,
-                    "transport": 0.1,
-                    "healthcare": 0.1,
-                    "savings": 0.1,
-                    "misc": 0.1
-                }
             }
             acc_id = new_acc["_id"] # Get the id of the connected account
             connected_accounts.insert_one(new_acc) # Store the connected account in the database
             users.find_one_and_update({"_id": user_id}, {"$push": {"connected_accounts": acc_id}}) # Add the connected account to the user
     
-        return jsonify(exchange_response.to_dict())
+        return jsonify(msg="Successfully added item to user connected accounts")
     except plaid.ApiException as e:
         return json.loads(e.body)
+    
+
+@app.route('/api/accounts', methods=['GET'])
+@jwt_required()
+def get_accounts():
+    user_id = get_jwt_identity()
+    try:
+        user = users.find_one({'_id': user_id})
+        if user:
+            accounts = user.get('connected_accounts', [])
+            account_data = []
+            for item in accounts:        
+                access_token_item = connected_accounts.find_one({'_id':item}).get("access-token")
+                
+                request = AccountsGetRequest(
+                    access_token=access_token_item
+                )
+                response = plaid_client.accounts_get(request)
+                account_data.append(response.to_dict())
+        return jsonify(account_data)
+    except plaid.ApiException as e:
+        return jsonify(e)
+    
+
+# @app.route('/api/transactions', methods=['GET'])
+# @jwt_required()
+# def get_transactions():
+#     user_id = get_jwt_identity()
+
+
+#     start_date = (date.today() - timedelta(days=30)).strftime('%Y-%m-%d')
+#     end_date = date.today().strftime('%Y-%m-%d')
+
+#     # Convert the string back to a date object
+#     start_date_obj = datetime.strptime(start_date, '%Y-%m-%d').date()
+#     end_date_obj = datetime.strptime(end_date, '%Y-%m-%d').date()
+    
+#     try:
+#         user = users.find_one({'_id': user_id})
+#         if user:
+#             accounts = user.get('connected_accounts', [])
+#             transaction_data = []
+#             for item in accounts:        
+#                 access_token_item = connected_accounts.find_one(
+#                     {'_id': item}).get("access-token")
+#                 request = TransactionsGetRequest(
+#                     access_token=access_token_item,
+#                     start_date=start_date_obj,
+#                     end_date=end_date_obj
+#                 )
+#                 response = plaid_client.transactions_get(request)
+#                 transactions = response['transactions']
+#                 for transaction in transactions:
+#                     print(transaction)
+#                     break
+                
+#             return jsonify(transaction_data)
+#     except plaid.ApiException as e:
+#         return jsonify(e)
+
 
 @app.route('/api/accounts_and_transactions', methods=['GET'])
 @jwt_required()
