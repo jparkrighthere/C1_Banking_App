@@ -74,7 +74,7 @@ const App = () => {
       <h4>{linkToken}</h4>
       <button
         onClick={() =>
-          fetch('/api/transactions', {
+          fetch('/api/accounts', {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',

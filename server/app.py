@@ -17,6 +17,7 @@ from plaid.model.country_code import CountryCode
 from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchangeRequest
 from plaid.model.link_token_create_request_user import LinkTokenCreateRequestUser
 from plaid.model.link_token_create_request import LinkTokenCreateRequest
+from plaid.model.identity_get_request import IdentityGetRequest
 from plaid.model.transactions_get_request import TransactionsGetRequest
 from plaid.model.accounts_get_request import AccountsGetRequest
 from plaid.model.products import Products
@@ -198,6 +199,28 @@ def get_accounts():
                 response = plaid_client.accounts_get(request)
                 account_data.append(response.to_dict())
         return jsonify(account_data)
+    except plaid.ApiException as e:
+        return jsonify(e)
+    
+
+@app.route('/api/identity', methods=['GET'])
+@jwt_required()
+def get_identity():
+    user_id = get_jwt_identity()
+    try:
+        user = users.find_one({'_id': user_id})
+        if user:
+            accounts = user.get('connected_accounts', [])
+            identity_data = []
+            for item in accounts:
+                access_token_item = connected_accounts.find_one(
+                    {'_id': item}).get("access-token")
+                request = IdentityGetRequest(
+                    access_token=access_token_item
+                )
+                response = plaid_client.identity_get(request)
+                identity_data.append(response.to_dict())
+        return jsonify({'error': None, 'identity': identity_data})
     except plaid.ApiException as e:
         return jsonify(e)
     
