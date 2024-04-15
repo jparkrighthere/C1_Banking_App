@@ -34,3 +34,12 @@
   border: 1px solid grey;
   padding-left: 8px;
 }
+
+.pageNav {
+  margin-top: 30px;
+}
+
+.formLogo {
+  min-height: 150px;
+  width: 200px;
+}
