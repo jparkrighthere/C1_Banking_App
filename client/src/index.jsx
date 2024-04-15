@@ -1,11 +1,10 @@
 import React, { useContext } from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './linktoken.jsx';
 import './index.css';
 import SignIn from './SignIn.jsx';
 import Register from './Register.jsx';
 import AuthContext,{ AuthProvider } from './AuthContext';
-import AccountPage from './components/Account';
+import AccountPage from './components/Account/Account.jsx';
 import {
   BrowserRouter as Router,
   Routes,
@@ -20,21 +19,23 @@ const Index = () => {
       <AuthProvider>
         <Router>
           <Routes>
-            <Route path="/signin" element={<SignIn />} /> 
+            <Route path="/signin" element={<SignIn />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/" element={
+            <Route
+              path="/"
+              element={
                 <RequireAuth>
-                  <App />  
+                  <AccountPage />
                 </RequireAuth>
-              } 
-            /> 
-            <Route path="/register" element={<Register />} />
-            <Route path="/account" element={<AccountPage />} />
+              }
+            />
+            {/* Redirect to "/signin" if the path is not found */}
+            <Route path="*" element={<Navigate to="/signin" replace />} />
           </Routes>
         </Router>
       </AuthProvider>
     </React.StrictMode>
-  )
+  );
 };
 
 // To protect routes
@@ -47,4 +48,5 @@ RequireAuth.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-ReactDOM.createRoot(document.getElementById('root')).render(<Index />);
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<Index />);

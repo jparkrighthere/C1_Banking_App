@@ -69,9 +69,9 @@ const App = () => {
       <button onClick={() => open()} disabled={!ready}>
         <strong>Link account</strong>
       </button>
-      {isLoggedIn && <button onClick={logout}>Logout</button>}
-      <h3>This is the generated token:</h3>
-      <h4>{linkToken}</h4>
+      {/* {isLoggedIn && <button onClick={logout}>Logout</button>} */}
+      {/* <h3>This is the generated token:</h3>
+      <h4>{linkToken}</h4> */}
       <button
         onClick={() =>
           fetch('/api/accounts', {
@@ -83,7 +83,7 @@ const App = () => {
           }).then(res=>res.json()).then(data=>console.log(data))
         }
       >
-        <strong>Test</strong>
+        {/* <strong>Test</strong> */}
       </button>
     </div>
   );

@@ -1,0 +1,45 @@
+.account-container {
+    font-family: Arial, sans-serif;
+    color: white;
+    background-color: black;
+  }
+  
+  .account-header {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .nav-links button {
+    margin-right: 10px;
+  }
+  
+  .profile-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .profile-info img {
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .account-main {
+    padding: 20px;
+  }
+  
+  .net-worth-summary, .financial-assets, .debt-summary {
+    margin-bottom: 20px;
+  }
+  
+  .accounts-list .account-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .accounts-list .account-item img {
+    margin-right: 10px;
+  }
+  
