@@ -51,18 +51,20 @@ const SignIn = () => {
         console.error('Login failed: ', error.message);
     }
     return;
-    //navigate("/");
   };
 
   return (
     <div style={{
         position: 'absolute',
         left: '50%',
-        top: '50%',
+        top: '45%',
         transform: 'translate(-50%, -50%)'
     }}>
+        
         <div className="form-container">
+        
         <form className="form" onSubmit={handleSignIn}>
+        <img src="/Images/logo2.png" alt="Capital One Logo" className="formLogo"/>
             <h2>Sign In</h2>
             <div className="input-container">
                 <label>Username: </label>
@@ -75,7 +77,7 @@ const SignIn = () => {
             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
             <button type="submit">Sign In</button>
         </form>
-        <p>Don&apos;t have an account? <Link to="/register">Register Here</Link></p>
+        <p className="pageNav">Don&apos;t have an account? <Link to="/register">Register Here</Link></p>
         </div>
     </div>
   );

@@ -12,10 +12,10 @@ const Header = () => {
 
   return (
     <header className="header">
-      <img src="/Images/logo.png" alt="Capital One Logo" className="logo" />
+      <img src="/Images/logo2.png" alt="Capital One Logo" className="logo" />
       <nav className="navigation">
-        <Link to="/" className="nav-link">Accounts</Link>
         <Link to="/budget" className="nav-link">Budget</Link>
+        <Link to="/" className="nav-link">Accounts</Link>
         <Link to="/signin" className="nav-link" onClick={
             () => {
                 logout();

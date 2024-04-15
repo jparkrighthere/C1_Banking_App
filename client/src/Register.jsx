@@ -65,11 +65,12 @@ const Register = () => {
     <div style={{
         position: 'absolute',
         left: '50%',
-        top: '50%',
+        top: '45%',
         transform: 'translate(-50%, -50%)'
     }}>
         <div className="form-container">
         <form className="form">
+        <img src="/Images/logo2.png" alt="Capital One Logo" className="formLogo"/>
             <h2> Create an Account </h2>
             <div className="input-container">
                 <label>Username: </label>
@@ -86,7 +87,7 @@ const Register = () => {
             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
             <button onClick={handleCreateAccount}>Create Account</button>
         </form>
-        <p>Already have an account? <Link to="/signin">Sign In</Link></p>
+        <p className="pageNav">Already have an account? <Link to="/signin">Sign In</Link></p>
         </div>
         </div>
   );
