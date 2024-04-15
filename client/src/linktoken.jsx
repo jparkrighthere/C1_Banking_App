@@ -4,8 +4,24 @@ import AuthContext from './AuthContext';
 
 const App = () => {
   const [linkToken, setToken] = useState(null);
-  // const [accounts, setAccounts] = useState([]);
+  const [accounts, setAccounts] = useState([]);
   const { authToken } = useContext(AuthContext);
+
+  // Set access token
+  const onSuccess = useCallback(async (publicToken) => {
+    const response = await fetch('/api/set_access_token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+         Authorization: `Bearer ${authToken}`,
+      },
+
+      body: JSON.stringify({ public_token: publicToken }),
+    });
+    const data = response.json()
+    console.log(data);
+
+  }, []);
 
   // Creates a Link token
   const createLinkToken = useCallback(async () => {
@@ -26,23 +42,8 @@ const App = () => {
     }
   }, [setToken]);
 
-  // Set access token
-  const onSuccess = useCallback(async (publicToken) => {
-    const response = await fetch('/api/set_access_token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-         Authorization: `Bearer ${authToken}`,
-      },
-
-      body: JSON.stringify({ public_token: publicToken }),
-    });
-    const data = await response.json()
-    console.log(data);
-  }, []);
-
-  // Fetch accounts
-  // const fetchAccounts = async () => {
+  //  // Fetch accounts
+  //  const fetchAccounts = async () => {
   //   const response = await fetch('/api/accounts', {
   //     method: 'GET',
   //     headers: {
@@ -55,18 +56,15 @@ const App = () => {
   // };
 
   let isOauth = false;
-
   const config = {
     token:linkToken,
     onSuccess,
   };
-
   // For OAuth, configure the received redirect URI
   if (window.location.href.includes("?oauth_state_id=")) {
     config.receivedRedirectUri = window.location.href;
     isOauth = true;
   }
-
   const { open, ready } = usePlaidLink(config);
 
   useEffect(() => {
@@ -83,8 +81,6 @@ const App = () => {
       <button onClick={() => open()} disabled={!ready}>
         <strong>Link account</strong>
       </button>
-      <p>This is the generated token:</p>
-      <p>{linkToken}</p>
       <button
         onClick={() =>
           fetch('/api/accounts', {
@@ -93,18 +89,23 @@ const App = () => {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${authToken}`,
             },
-          }).then(res=>res.json()).then(data=>console.log(data))
+          })
+          .then(res=>res.json())
+          .then(data=> {
+            console.log(data);
+            setAccounts(data);
+          })
         }
       >
-          <strong>Test</strong>
+        <strong>Test</strong>
       </button>
-      {/* <div>
+      <div>
         {accounts.map((account, index) => (
           <div key={index}>
             <pre>{JSON.stringify(account, null, 2)}</pre>
           </div>
         ))}
-      </div> */}
+      </div>
     </div>
   );
 };
