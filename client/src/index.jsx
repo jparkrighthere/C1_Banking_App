@@ -1,37 +1,44 @@
-import React, { useContext } from 'react';
+import React,{ useContext } from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './linktoken.jsx';
 import './index.css';
 import SignIn from './SignIn.jsx';
 import Register from './Register.jsx';
-import AuthContext,{ AuthProvider } from './AuthContext';
+import AuthContext, { AuthProvider } from './AuthContext';
+import Account from './components/Account/Accounts.jsx';
+import Budget from './components/Budget/Budget.jsx';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
+  Navigate
 } from "react-router-dom";
 import PropTypes from 'prop-types';
 
 const Index = () => {
   return (
     <React.StrictMode>
-      <AuthProvider>
-        <Router>
-          <Routes>
-            <Route path="/signin" element={<SignIn />} /> 
-            <Route path="/register" element={<Register />} />
-            <Route path="/" element={
-                <RequireAuth>
-                  <App />  
-                </RequireAuth>
-              } 
-            /> 
-          </Routes>
-        </Router>
-      </AuthProvider>
-    </React.StrictMode>
-  )
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/signin" element={<SignIn />} /> 
+          <Route path="/register" element={<Register />} />
+          <Route path="/" element={
+              <RequireAuth>
+                <Account />  
+              </RequireAuth>
+            } 
+          />
+          <Route path="/budget" element={
+              <RequireAuth>
+                <Budget />
+              </RequireAuth>
+            }
+          /> 
+        </Routes>
+      </Router>
+    </AuthProvider>
+  </React.StrictMode>
+  );
 };
 
 // To protect routes

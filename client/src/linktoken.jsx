@@ -4,7 +4,9 @@ import AuthContext from './AuthContext';
 
 const App = () => {
   const [linkToken, setToken] = useState(null);
-  const { isLoggedIn, logout, authToken } = useContext(AuthContext);
+  const [accounts, setAccounts] = useState([]);
+  const { authToken } = useContext(AuthContext);
+
   // Set access token
   const onSuccess = useCallback(async (publicToken) => {
     const response = await fetch('/api/set_access_token', {
@@ -40,19 +42,29 @@ const App = () => {
     }
   }, [setToken]);
 
-  let isOauth = false;
+  //  // Fetch accounts
+  //  const fetchAccounts = async () => {
+  //   const response = await fetch('/api/accounts', {
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: `Bearer ${authToken}`,
+  //     },
+  //   });
+  //   const data = await response.json();
+  //   setAccounts(data);
+  // };
 
+  let isOauth = false;
   const config = {
     token:linkToken,
     onSuccess,
   };
-
   // For OAuth, configure the received redirect URI
   if (window.location.href.includes("?oauth_state_id=")) {
     config.receivedRedirectUri = window.location.href;
     isOauth = true;
   }
-
   const { open, ready } = usePlaidLink(config);
 
   useEffect(() => {
@@ -69,9 +81,6 @@ const App = () => {
       <button onClick={() => open()} disabled={!ready}>
         <strong>Link account</strong>
       </button>
-      {isLoggedIn && <button onClick={logout}>Logout</button>}
-      <h3>This is the generated token:</h3>
-      <h4>{linkToken}</h4>
       <button
         onClick={() =>
           fetch('/api/accounts', {
@@ -80,11 +89,23 @@ const App = () => {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${authToken}`,
             },
-          }).then(res=>res.json()).then(data=>console.log(data))
+          })
+          .then(res=>res.json())
+          .then(data=> {
+            console.log(data);
+            setAccounts(data);
+          })
         }
       >
         <strong>Test</strong>
       </button>
+      <div>
+        {accounts.map((account, index) => (
+          <div key={index}>
+            <pre>{JSON.stringify(account, null, 2)}</pre>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
