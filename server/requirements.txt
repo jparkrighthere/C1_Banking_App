@@ -10,9 +10,11 @@ MarkupSafe==2.1.5
 nulltype==2.3.1
 plaid-python==19.0.0
 PyJWT==2.8.0
-pymongo==4.6.2
+pymongo==4.6.3
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 six==1.16.0
 urllib3==2.2.1
 Werkzeug==3.0.1
+bcrypt==4.1.2
+certifi==2024.2.2

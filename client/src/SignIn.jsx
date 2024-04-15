@@ -47,6 +47,7 @@ const SignIn = () => {
         login(access_token);
         navigate("/");
     } catch (error) {
+        setErrorMessage("Invalid Login, try again");
         console.error('Login failed: ', error.message);
     }
     return;
