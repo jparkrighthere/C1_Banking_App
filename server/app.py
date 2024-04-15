@@ -223,67 +223,42 @@ def get_identity():
         return jsonify({'error': None, 'identity': identity_data})
     except plaid.ApiException as e:
         return jsonify(e)
-    
 
-# @app.route('/api/transactions', methods=['GET'])
-# @jwt_required()
-# def get_transactions():
-#     user_id = get_jwt_identity()
-
-
-#     start_date = (date.today() - timedelta(days=30)).strftime('%Y-%m-%d')
-#     end_date = date.today().strftime('%Y-%m-%d')
-
-#     # Convert the string back to a date object
-#     start_date_obj = datetime.strptime(start_date, '%Y-%m-%d').date()
-#     end_date_obj = datetime.strptime(end_date, '%Y-%m-%d').date()
-    
-#     try:
-#         user = users.find_one({'_id': user_id})
-#         if user:
-#             accounts = user.get('connected_accounts', [])
-#             transaction_data = []
-#             for item in accounts:        
-#                 access_token_item = connected_accounts.find_one(
-#                     {'_id': item}).get("access-token")
-#                 request = TransactionsGetRequest(
-#                     access_token=access_token_item,
-#                     start_date=start_date_obj,
-#                     end_date=end_date_obj
-#                 )
-#                 response = plaid_client.transactions_get(request)
-#                 transactions = response['transactions']
-#                 for transaction in transactions:
-#                     print(transaction)
-#                     break
-                
-#             return jsonify(transaction_data)
-#     except plaid.ApiException as e:
-#         return jsonify(e)
-
-
-@app.route('/api/accounts_and_transactions', methods=['GET'])
+@app.route('/api/transactions', methods=['GET'])
 @jwt_required()
-def get_accounts_and_transactions():
-    #TODO Rohan, get access token from user jwt, find the user in our database, get all their account tokens, get finance info
-    try:
-        #get accs
-        accounts_response = plaid_client.accounts_get(access_token)
-        accounts = accounts_response.to_dict()
-        #get associated transactions
-        for account in accounts['accounts']:
-            account_access_token = account['account_id']
-            transactions_response = plaid_client.transactions_get(
-                account_access_token,
-                start_date='2000-01-01',
-                end_date='2024-12-31',
-            )
-            account['transactions'] = transactions_response.to_dict()
-        #ret both accs and transactions
-        return jsonify(accounts=accounts)
-    except plaid.ApiException as e:
-        return json.loads(e.body)
+def get_transactions():
+    user_id = get_jwt_identity()
 
+
+    start_date = (date.today() - timedelta(days=30)).strftime('%Y-%m-%d')
+    end_date = date.today().strftime('%Y-%m-%d')
+
+    # Convert the string back to a date object
+    start_date_obj = datetime.strptime(start_date, '%Y-%m-%d').date()
+    end_date_obj = datetime.strptime(end_date, '%Y-%m-%d').date()
+    
+    try:
+        user = users.find_one({'_id': user_id})
+        if user:
+            accounts = user.get('connected_accounts', [])
+            transaction_data = []
+            for item in accounts:        
+                access_token_item = connected_accounts.find_one(
+                    {'_id': item}).get("access-token")
+                request = TransactionsGetRequest(
+                    access_token=access_token_item,
+                    start_date=start_date_obj,
+                    end_date=end_date_obj
+                )
+                response = plaid_client.transactions_get(request)
+                transactions = response['transactions']
+                for transaction in transactions:
+                    print(transaction)
+                    break
+                
+            return jsonify(transaction_data)
+    except plaid.ApiException as e:
+        return jsonify(e)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
