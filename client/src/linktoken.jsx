@@ -4,22 +4,8 @@ import AuthContext from './AuthContext';
 
 const App = () => {
   const [linkToken, setToken] = useState(null);
-  const { isLoggedIn, logout, authToken } = useContext(AuthContext);
-  // Set access token
-  const onSuccess = useCallback(async (publicToken) => {
-    const response = await fetch('/api/set_access_token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-         Authorization: `Bearer ${authToken}`,
-      },
-
-      body: JSON.stringify({ public_token: publicToken }),
-    });
-    const data = response.json()
-    console.log(data);
-
-  }, []);
+  // const [accounts, setAccounts] = useState([]);
+  const { authToken } = useContext(AuthContext);
 
   // Creates a Link token
   const createLinkToken = useCallback(async () => {
@@ -39,6 +25,34 @@ const App = () => {
       localStorage.setItem('link_token', data.link_token);
     }
   }, [setToken]);
+
+  // Set access token
+  const onSuccess = useCallback(async (publicToken) => {
+    const response = await fetch('/api/set_access_token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+         Authorization: `Bearer ${authToken}`,
+      },
+
+      body: JSON.stringify({ public_token: publicToken }),
+    });
+    const data = await response.json()
+    console.log(data);
+  }, []);
+
+  // Fetch accounts
+  // const fetchAccounts = async () => {
+  //   const response = await fetch('/api/accounts', {
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: `Bearer ${authToken}`,
+  //     },
+  //   });
+  //   const data = await response.json();
+  //   setAccounts(data);
+  // };
 
   let isOauth = false;
 
@@ -69,9 +83,8 @@ const App = () => {
       <button onClick={() => open()} disabled={!ready}>
         <strong>Link account</strong>
       </button>
-      {/* {isLoggedIn && <button onClick={logout}>Logout</button>} */}
-      {/* <h3>This is the generated token:</h3>
-      <h4>{linkToken}</h4> */}
+      <p>This is the generated token:</p>
+      <p>{linkToken}</p>
       <button
         onClick={() =>
           fetch('/api/accounts', {
@@ -83,8 +96,15 @@ const App = () => {
           }).then(res=>res.json()).then(data=>console.log(data))
         }
       >
-        {/* <strong>Test</strong> */}
+          <strong>Test</strong>
       </button>
+      {/* <div>
+        {accounts.map((account, index) => (
+          <div key={index}>
+            <pre>{JSON.stringify(account, null, 2)}</pre>
+          </div>
+        ))}
+      </div> */}
     </div>
   );
 };
