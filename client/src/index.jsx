@@ -5,6 +5,7 @@ import './index.css';
 import SignIn from './SignIn.jsx';
 import Register from './Register.jsx';
 import AuthContext,{ AuthProvider } from './AuthContext';
+import AccountPage from './components/Account';
 import {
   BrowserRouter as Router,
   Routes,
@@ -27,6 +28,8 @@ const Index = () => {
                 </RequireAuth>
               } 
             /> 
+            <Route path="/register" element={<Register />} />
+            <Route path="/account" element={<AccountPage />} />
           </Routes>
         </Router>
       </AuthProvider>
