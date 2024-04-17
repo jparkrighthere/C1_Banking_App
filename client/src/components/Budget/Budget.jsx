@@ -1,22 +1,16 @@
 import Header from "../Header/Header";
-import { DonutChart } from "./donutChart.jsx";
+// import { DonutChart } from "./donutChart.jsx";
 import "./budget.css"
+import SpendingInsight from "./SpendingInsight";
+import { sampleTransactions } from './spendingInsightData.js';
 
 export default function Budget() {
   return (
     <div>
       <Header />
-      <div className="page-title">
-        <h2>Budget</h2>
-        <p>Spending Details at a glance</p>
-      </div>
-      <hr className="top-line-break"></hr>
-      <div>
-        
-        <div className="donut-widget">
-          <p className="widget-title">Spending Overview</p>
-          <DonutChart />
-        </div>
+      {/* <hr className="top-line-break"></hr> */}
+      <div className="donut-widget">
+        <SpendingInsight transactions={sampleTransactions} numOfItems={1} />
       </div>
     </div>
   );

@@ -1,0 +1,44 @@
+/* SpendingInsights Component Styles */
+
+.monthlySpendingHeading {
+    margin-top: 56px; /* Assuming $unit is 8px */
+    margin-bottom: 0;
+  }
+  
+  .tableSubHeading {
+    margin-top: 8px;
+  }
+  
+  .monthlySpendingText {
+    margin-bottom: 32px;
+    font-family: monospace; /* Assuming a simple monospace stack */
+    font-size: 16px; /* Assuming $unit is 8px */
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  
+  .monthlySpendingContainer {
+    display: flex;
+  }
+  
+  .userDataBox {
+    width: 552px; /* Assuming $unit is 8px */
+    min-height: 320px; /* Assuming $unit is 8px */
+    border: 1px solid #000; /* Assuming $black200 was similar to black */
+    margin-right: 16px;
+  }
+  
+  .holdingsList {
+    padding: 32px;
+  }
+  
+  .holdingsList .title, /* Adjustment for nesting */
+  .spendingInsightData .title { /* Adjustment for nesting */
+    font-weight: bold;
+  }
+  
+  .spendingInsightData {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  
