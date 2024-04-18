@@ -5,7 +5,7 @@ import os
 import bcrypt # for password hashing
 import certifi
 from datetime import datetime, date, timedelta
-
+from bson import ObjectId
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -86,7 +86,7 @@ def login():
         salt = user["salt"] # Get the salt
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt) # Hash the password using the associated salt
         if(hashed_password == user["password"]): 
-            user_id = user["_id"] # Set the user id to the user id associated with the account
+            user_id = str(user["_id"]) # Set the user id to the user id associated with the account
         else: # If the password is incorrect
             return jsonify({"error": "Invalid password", "message": "The provided password is incorrect"}), 401
     else: # If the user does not exist
@@ -113,14 +113,15 @@ def register():
         salt = bcrypt.gensalt() # Generate a salt
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt) # Hash the password using the salt
         new_user = { # Create the user object
-            "_id": users.count_documents({})+1,
             "name": username,
             "password": hashed_password,
             "salt": salt,
             "connected_accounts": []
         }
-        users.insert_one(new_user) # Store the user object in the database
-        user_id = new_user["_id"] # Get the id of the user
+        users.insert_one(new_user)
+        # Store the user object in the database
+       
+        user_id = str(users.find_one({"name": username})["_id"]) # Get the id of the user
 
     
     if user_id!=None:
@@ -174,7 +175,7 @@ def get_access_token():
             }
             acc_id = new_acc["_id"] # Get the id of the connected account
             connected_accounts.insert_one(new_acc) # Store the connected account in the database
-            users.find_one_and_update({"_id": user_id}, {"$push": {"connected_accounts": acc_id}}) # Add the connected account to the user
+            users.find_one_and_update({"_id": ObjectId(user_id)}, {"$push": {"connected_accounts": acc_id}}) # Add the connected account to the user
     
         return jsonify(msg="Successfully added item to user connected accounts")
     except plaid.ApiException as e:
@@ -186,7 +187,7 @@ def get_access_token():
 def get_accounts():
     user_id = get_jwt_identity()
     try:
-        user = users.find_one({'_id': user_id})
+        user = users.find_one({'_id': ObjectId(user_id)})
         if user:
             accounts = user.get('connected_accounts', [])
             account_data = []
@@ -208,7 +209,7 @@ def get_accounts():
 def get_identity():
     user_id = get_jwt_identity()
     try:
-        user = users.find_one({'_id': user_id})
+        user = users.find_one({'_id': ObjectId(user_id)})
         if user:
             accounts = user.get('connected_accounts', [])
             identity_data = []
