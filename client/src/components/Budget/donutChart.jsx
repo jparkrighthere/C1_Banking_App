@@ -1,6 +1,5 @@
-import React from "react";
 import { PieChart, Pie, Cell, Legend } from "recharts";
-import { data } from "./donutChartData";
+import { sampleTransactions } from "./spendingInsightData";
 
 export const DonutChart = () => {
     const colors = [
@@ -13,27 +12,22 @@ export const DonutChart = () => {
     ];
 
     return (
-        <div
-            style={{
-                textAlign: "center",
-                margin: "auto 10%",
-            }}
-        >
+        <div className="holdingsList">
             <PieChart width={500} height={300}>
                 <Pie
-                    data={data}
-                    dataKey="value"
+                    data={sampleTransactions}
+                    dataKey="amount"
                     outerRadius={90}
                     innerRadius={70}
-                    label={({ value }) =>
-                        `$${value}`
+                    label={({ amount }) =>
+                        `$${amount}`
                     }
                     stroke="#242424"
                     cx="50%"
                     cy="50%"
                     paddingAngle={5}
                 >
-                    {data.map((entry, index) => (
+                    {sampleTransactions.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
                     ))}
                 </Pie>
