@@ -1,7 +1,5 @@
-/* SpendingInsights Component Styles */
-
 .monthlySpendingHeading {
-    margin-top: 56px; /* Assuming $unit is 8px */
+    margin-top: 56px;
     margin-bottom: 0;
   }
   
@@ -11,8 +9,8 @@
   
   .monthlySpendingText {
     margin-bottom: 32px;
-    font-family: monospace; /* Assuming a simple monospace stack */
-    font-size: 16px; /* Assuming $unit is 8px */
+    font-family: monospace;
+    font-size: 16px;
     letter-spacing: 1px;
     text-transform: uppercase;
   }
@@ -22,9 +20,9 @@
   }
   
   .userDataBox {
-    width: 552px; /* Assuming $unit is 8px */
-    min-height: 320px; /* Assuming $unit is 8px */
-    border: 1px solid #000; /* Assuming $black200 was similar to black */
+    width: 552px;
+    min-height: 320px;
+    border: 1px solid #000;
     margin-right: 16px;
   }
   
@@ -32,8 +30,8 @@
     padding: 32px;
   }
   
-  .holdingsList .title, /* Adjustment for nesting */
-  .spendingInsightData .title { /* Adjustment for nesting */
+  .holdingsList .title,
+  .spendingInsightData .title { 
     font-weight: bold;
   }
   
