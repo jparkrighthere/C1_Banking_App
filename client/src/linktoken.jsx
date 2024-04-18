@@ -83,7 +83,7 @@ const App = () => {
       </button>
       <button
         onClick={() =>
-          fetch('/api/accounts', {
+          fetch('/api/transactions', {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',

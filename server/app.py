@@ -19,6 +19,7 @@ from plaid.model.link_token_create_request_user import LinkTokenCreateRequestUse
 from plaid.model.link_token_create_request import LinkTokenCreateRequest
 from plaid.model.identity_get_request import IdentityGetRequest
 from plaid.model.transactions_get_request import TransactionsGetRequest
+from plaid.model.transactions_sync_request import TransactionsSyncRequest
 from plaid.model.accounts_get_request import AccountsGetRequest
 from plaid.model.products import Products
 from plaid.api import plaid_api
@@ -224,66 +225,51 @@ def get_identity():
         return jsonify({'error': None, 'identity': identity_data})
     except plaid.ApiException as e:
         return jsonify(e)
-    
 
-# @app.route('/api/transactions', methods=['GET'])
-# @jwt_required()
-# def get_transactions():
-#     user_id = get_jwt_identity()
-
-
-#     start_date = (date.today() - timedelta(days=30)).strftime('%Y-%m-%d')
-#     end_date = date.today().strftime('%Y-%m-%d')
-
-#     # Convert the string back to a date object
-#     start_date_obj = datetime.strptime(start_date, '%Y-%m-%d').date()
-#     end_date_obj = datetime.strptime(end_date, '%Y-%m-%d').date()
-    
-#     try:
-#         user = users.find_one({'_id': user_id})
-#         if user:
-#             accounts = user.get('connected_accounts', [])
-#             transaction_data = []
-#             for item in accounts:        
-#                 access_token_item = connected_accounts.find_one(
-#                     {'_id': item}).get("access-token")
-#                 request = TransactionsGetRequest(
-#                     access_token=access_token_item,
-#                     start_date=start_date_obj,
-#                     end_date=end_date_obj
-#                 )
-#                 response = plaid_client.transactions_get(request)
-#                 transactions = response['transactions']
-#                 for transaction in transactions:
-#                     print(transaction)
-#                     break
-                
-#             return jsonify(transaction_data)
-#     except plaid.ApiException as e:
-#         return jsonify(e)
-
-
-@app.route('/api/accounts_and_transactions', methods=['GET'])
+@app.route('/api/transactions', methods=['GET'])
 @jwt_required()
-def get_accounts_and_transactions():
-    #TODO Rohan, get access token from user jwt, find the user in our database, get all their account tokens, get finance info
+def get_transactions():
+    user_id = get_jwt_identity()
     try:
-        #get accs
-        accounts_response = plaid_client.accounts_get(access_token)
-        accounts = accounts_response.to_dict()
-        #get associated transactions
-        for account in accounts['accounts']:
-            account_access_token = account['account_id']
-            transactions_response = plaid_client.transactions_get(
-                account_access_token,
-                start_date='2000-01-01',
-                end_date='2024-12-31',
-            )
-            account['transactions'] = transactions_response.to_dict()
-        #ret both accs and transactions
-        return jsonify(accounts=accounts)
+        user = users.find_one({'_id': user_id})
+        if user:
+            accounts = user.get('connected_accounts', [])
+            transactions_data = []
+            for item in accounts:
+                access_token_item = connected_accounts.find_one(
+                    {'_id': item}).get("access-token")
+                # Set cursor to empty to receive all historical updates
+                cursor = ''
+                # New transaction updates since "cursor"
+                added = []
+                modified = []
+                removed = []  # Removed transaction ids
+                has_more = True
+                # Iterate through each page of new transaction updates for item
+                while has_more:
+                    request = TransactionsSyncRequest(
+                        access_token=access_token_item,
+                        cursor=cursor,
+                    )
+                    response = plaid_client.transactions_sync(request).to_dict()
+                    added.extend(response['added'])
+                    modified.extend(response['modified'])
+                    removed.extend(response['removed'])
+                    has_more = response['has_more']
+                    # Update cursor to the next cursor
+                    cursor = response['next_cursor']
+                    print(json.dumps(response, indent=2, sort_keys=True, default=str))
+                # Sort and select the 10 most recent transactions
+                transactions_data.extend(sorted(added, key=lambda t: t['date'])[-10:])
+        return jsonify(transactions_data)
     except plaid.ApiException as e:
-        return json.loads(e.body)
+        return jsonify(e)
+
+#Delete ltr
+def format_error(e):
+    response = json.loads(e.body)
+    return {'error': {'status_code': e.status, 'display_message':
+                      response['error_message'], 'error_code': response['error_code'], 'error_type': response['error_type']}}
 
 
 if __name__ == "__main__":
