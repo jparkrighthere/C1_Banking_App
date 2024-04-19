@@ -1,15 +1,20 @@
 import App from '../../linktoken';
 import Header from '../Header/Header';
+import NetWorth from './Asset';
+import { mockPersonalAssets, mockAccounts, mockNumOfItems, mockUserId, mockAssetsOnly } from './assetData';
 
 const AccountPage = () => {
 
   return (
-    <div style={{
-      marginLeft: '5px',
-    }}>
+    <div>
       <Header />
-      <h1>Net Worth</h1>
-      <p>What you have and what you owe - all in one place</p>
+      <NetWorth
+      personalAssets={mockPersonalAssets}
+      accounts={mockAccounts}
+      numOfItems={mockNumOfItems}
+      userId={mockUserId}
+      assetsOnly={mockAssetsOnly}
+      />
       <App />
     </div>
   );
