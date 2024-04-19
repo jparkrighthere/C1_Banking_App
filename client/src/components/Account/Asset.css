@@ -1,0 +1,73 @@
+.netWorthContainer {
+    display: flex;
+}
+
+.netWorthHeading {
+    margin-top: 8px;
+}
+
+.tableSubHeading {
+    margin-top: 8px;
+}
+
+.netWorthText {
+    margin-bottom: 32px;
+    font-family: monospace;
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.netWorthDollars {
+    margin-top: 4px;
+}
+
+.holdingsContainer {
+    display: flex;
+}
+
+.userDataBox {
+    width: 276px;
+    min-height: 160px;
+    border: 1px solid #D3D3D3;
+    margin-right: 8px;
+}
+
+.holdingsList {
+    padding: 16px;
+}
+
+.assetsHeaderContainer {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.holdingsHeading {
+    margin-top: 0;
+}
+
+.dataItem {
+    display: grid;
+    grid-template-columns: 5fr 5fr 1fr;
+    margin-bottom: 0;
+}
+
+.personalAssets {
+    display: grid;
+    grid-template-columns: 5fr 5fr 1fr;
+}
+
+.personalAsset {
+    display: grid;
+    grid-template-columns: 5fr 5fr 1fr;
+}
+
+.title {
+    font-weight: bold;
+}
+
+.dollarsHeading {
+    font-weight: bold;
+    margin-top: 0;
+}
