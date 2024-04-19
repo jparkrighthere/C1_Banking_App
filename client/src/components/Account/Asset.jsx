@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
+import { PieChart, Pie, Legend, Cell } from 'recharts'; 
 import './Asset.css';
+import colors from 'plaid-threads/scss/colors';
 
 const currencyFilter = (amount) => {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
@@ -8,6 +10,15 @@ const currencyFilter = (amount) => {
 const pluralize = (word, count) => {
     return count === 1 ? word : word + 's';
 };
+
+const COLORS = [
+  colors.yellow900,
+  colors.red900,
+  colors.blue900,
+  colors.green900,
+  colors.black1000,
+  colors.purple600,
+];
 
 export default function NetWorth(props) {
   // sums of account types
@@ -27,13 +38,9 @@ export default function NetWorth(props) {
   const investment = addAllAccounts(['ira', '401k']);
   const loan = addAllAccounts(['student', 'mortgage']);
   const credit = addAllAccounts(['credit card']);
-  const personalAssetValue = props.personalAssets.reduce((a, b) => {
-    return a + b.value;
-  }, 0);
 
-  const assets = depository + investment + personalAssetValue;
+  const assets = depository + investment;
   const liabilities = loan + credit;
-
 
   return (
     <div>
@@ -41,103 +48,91 @@ export default function NetWorth(props) {
       <h4 className="tableSubHeading">
         A summary of your assets and liabilities
       </h4>
-      {!props.assetsOnly && (
-        <>
-          <div className="netWorthText">{`Your total across ${
+      <>
+        <div className="netWorthText">{`Your total across ${
             props.numOfItems
-          } bank ${pluralize('account', props.numOfItems)}`}</div>
-          <h2 className="netWorthDollars">
-            {currencyFilter(assets - liabilities)}
-          </h2>
-          <div className="holdingsContainer">
-            <div className="userDataBox">
-              <div className="holdingsList">
-                {/* <div className="assetsHeaderContainer">
-                  <h4 className="dollarsHeading">{currencyFilter(assets)}</h4>
-                  <Asset userId={props.userId} />
-                </div> */}
-
-                <div className="data">
-                  {/* 3 columns */}
-                  <h4 className="holdingsHeading">Assets</h4>
-                  <p>{''}</p>
-                  <p>{''}</p>
-                  <p className="dataItem">Cash</p>{' '}
-                  <p className="dataItem">{currencyFilter(depository)}</p>
-                  <p>{''}</p>
-                  <p className="dataItem">Investment</p>
-                  <p className="dataItem">{currencyFilter(investment)}</p>
-                  <p>{''}</p>
+            } bank ${pluralize('account', props.numOfItems)}`}</div>
+            <h2 className="netWorthDollars">
+            {currencyFilter(assets + liabilities)}
+            </h2>
+            <div className="holdingsContainer">
+                <div className="userDataBox">
+                    <div className="holdingsList">
+                        <h4 className="holdingsHeading">Assets</h4>
+                      <div className="assetsHeaderContainer">
+                          <h4 className="dollarsHeading">{currencyFilter(assets)}</h4>
+                      </div>
+                      <PieChart width={500} height={300}>
+                          <Pie
+                              data={props.accounts.filter( a => a.current_balance >= 0)}
+                              dataKey="current_balance"
+                              nameKey="subtype"
+                              outerRadius={90}
+                              innerRadius={70}
+                              label={({ current_balance }) =>
+                                  `$ ${current_balance}`
+                              }
+                              stroke="#242424"
+                              cx="50%"
+                              cy="50%"
+                              paddingAngle={5}
+                            >
+                              {props.accounts.filter( a => a.current_balance >= 0).map((subtype, index) => (
+                                  <Cell key={`cell-${subtype}`} fill={COLORS[index % COLORS.length]} />
+                              ))}
+                          </Pie>
+                          <Legend
+                          layout="vertical"
+                          align="left"
+                          verticalAlign="middle"
+                          />
+                      </PieChart>
+                    </div>
                 </div>
-                <div className="personalAssets">
-                    {props.personalAssets.map(asset => (
-                        <div className="personalAsset" key={asset.id}>
-                            <p className="dataItem">{asset.description}</p>
-                            <p className="dataItem">{currencyFilter(asset.value)}</p>
-                        </div>
-                    ))}
+                <div className="userDataBox">
+                    <div className="holdingsList">
+                      <h4 className="holdingsHeading">Liabilities</h4>
+                      <div className="assetsHeaderContainer">
+                        <h4 className="dollarsHeading">{currencyFilter(liabilities)}</h4>
+                      </div>
+                      <PieChart width={500} height={300}>
+                          <Pie
+                             data={props.accounts.filter(a => a.current_balance < 0).map(account => ({
+                              ...account,
+                              current_balance: Math.abs(account.current_balance)
+                              }))}
+                              dataKey="current_balance"
+                              nameKey="subtype"
+                              outerRadius={90}
+                              innerRadius={70}
+                              label={({ current_balance }) =>
+                                  `$ -${current_balance}`
+                              }
+                              stroke="#242424"
+                              cx="50%"
+                              cy="50%"
+                              paddingAngle={5}
+                            >
+                              {props.accounts.filter( a => a.current_balance < 0).map((entry, index) => (
+                                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                              ))}
+                          </Pie>
+                          <Legend
+                          layout="vertical"
+                          align="left"
+                          verticalAlign="middle"
+                          />
+                      </PieChart>
+                    </div>
                 </div>
-              </div>
-            </div>
-            <div className="userDataBox">
-              <div className="holdingsList">
-                <h4 className="dollarsHeading">
-                  {currencyFilter(liabilities)}
-                </h4>
-
-                <div className="data">
-                  {/* 3 columns */}
-                  <h4 className="holdingsHeading">Liabilities</h4>
-                  <p>{''}</p>
-                  <p>{''}</p>
-                  <p className="dataItem">Credit Cards</p>{' '}
-                  <p className="dataItem">{currencyFilter(credit)}</p>
-                  <p>{''}</p>
-                  <p className="dataItem">Loans</p>
-                  <p className="dataItem">{currencyFilter(loan)}</p>
-                  <p>{''}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
-      {props.assetsOnly && (
-        <>
-          <h2 className="netWorthDollars">
-            {currencyFilter(assets - liabilities)}
-          </h2>
-          <div className="holdingsContainer">
-            <div className="userDataBox">
-            <div className="holdingsList">
-                {/* <div className="assetsHeaderContainer">
-                    <h4 className="dollarsHeading">{currencyFilter(assets)}</h4>
-                    <Asset userId={props.userId} />
-                </div> */}
-                <div className="data">
-                    <p className="title">Assets</p>
-                </div>
-                <div className="personalAssets">
-                    {props.personalAssets.map(asset => (
-                        <div className="personalAsset" key={asset.id}> {/* Added key prop */}
-                            <p className="dataItem">{asset.description}</p>
-                            <p className="dataItem">{currencyFilter(asset.value)}</p>
-                        </div>
-                    ))}
-                </div>
-            </div>
-            </div>
             </div>
         </>
-      )}
     </div>
   );
 }
 
 NetWorth.propTypes = {
-    personalAssets: PropTypes.array.isRequired,
     accounts: PropTypes.array.isRequired,
     numOfItems: PropTypes.number.isRequired,
     userId: PropTypes.number.isRequired,
-    assetsOnly: PropTypes.bool.isRequired,
 };

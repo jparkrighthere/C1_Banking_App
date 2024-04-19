@@ -20,7 +20,7 @@ export const DonutChart = () => {
                     outerRadius={90}
                     innerRadius={70}
                     label={({ amount }) =>
-                        `$${amount}`
+                        `$ ${amount}`
                     }
                     stroke="#242424"
                     cx="50%"
@@ -37,7 +37,6 @@ export const DonutChart = () => {
                 verticalAlign="middle"
                 />
             </PieChart>
-            
         </div>
     );
 };

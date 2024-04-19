@@ -1,69 +1,73 @@
 .netWorthContainer {
     display: flex;
-  }
-  
-  .netWorthHeading {
+}
+
+.netWorthHeading {
     margin-top: 8px;
-  }
-  
-  .tableSubHeading {
+}
+
+.tableSubHeading {
     margin-top: 8px;
-  }
-  
-  .netWorthText {
+}
+
+.netWorthText {
     margin-bottom: 32px;
     font-family: monospace;
     font-size: 16px;
     letter-spacing: 1px;
     text-transform: uppercase;
-  }
-  
-  .netWorthDollars {
+}
+
+.netWorthDollars {
     margin-top: 4px;
-  }
-  
-  .holdingsContainer {
+}
+
+.holdingsContainer {
     display: flex;
-  }
-  
-  .userDataBox {
+}
+
+.userDataBox {
     width: 276px;
     min-height: 160px;
     border: 1px solid #D3D3D3;
     margin-right: 8px;
-  }
-  
-  .holdingsList {
+}
+
+.holdingsList {
     padding: 16px;
-  }
-  
-  .assetsHeaderContainer {
+}
+
+.assetsHeaderContainer {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-  }
-  
-  .holdingsHeading {
+}
+
+.holdingsHeading {
     margin-top: 0;
-  }
-  
-  .dataItem {
+}
+
+.dataItem {
     display: grid;
     grid-template-columns: 5fr 5fr 1fr;
     margin-bottom: 0;
-  }
-  
-  .personalAssets {
+}
+
+.personalAssets {
     display: grid;
     grid-template-columns: 5fr 5fr 1fr;
-  }
-  
-  .personalAsset {
+}
+
+.personalAsset {
     display: grid;
     grid-template-columns: 5fr 5fr 1fr;
-  }
-  
-  .title {
+}
+
+.title {
     font-weight: bold;
-  }
-  
+}
+
+.dollarsHeading {
+    font-weight: bold;
+    margin-top: 0;
+}

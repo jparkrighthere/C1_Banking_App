@@ -1,7 +1,7 @@
 import App from '../../linktoken';
 import Header from '../Header/Header';
 import NetWorth from './Asset';
-import { mockPersonalAssets, mockAccounts, mockNumOfItems, mockUserId, mockAssetsOnly } from './assetData';
+import { mockAccounts, mockNumOfItems, mockUserId } from './assetData';
 
 const AccountPage = () => {
 
@@ -9,11 +9,9 @@ const AccountPage = () => {
     <div>
       <Header />
       <NetWorth
-      personalAssets={mockPersonalAssets}
-      accounts={mockAccounts}
-      numOfItems={mockNumOfItems}
-      userId={mockUserId}
-      assetsOnly={mockAssetsOnly}
+        accounts={mockAccounts}
+        numOfItems={mockNumOfItems}
+        userId={mockUserId}
       />
       <App />
     </div>
