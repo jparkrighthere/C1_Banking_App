@@ -1,30 +1,52 @@
-import  { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
 import AuthContext from '../../AuthContext';
 
 const Header = () => {
-    const { logout } = useContext(AuthContext);
-    const user = {
-        profileImage: '/Images/profile.jpg',
-        name: 'John Doe',
-    }
+  const { logout } = useContext(AuthContext);
+  const { authToken } = useContext(AuthContext);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    fetch('/api/identity', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => setUser(data['identity']));
+  }, []);
 
   return (
     <header className="header">
       <img src="/Images/logo2.png" alt="Capital One Logo" className="logo" />
       <nav className="navigation">
-        <Link to="/budget" className="nav-link">Budget</Link>
-        <Link to="/" className="nav-link">Accounts</Link>
-        <Link to="/signin" className="nav-link" onClick={
-            () => {
-                logout();
-            }
-        }>Logout</Link>
+        <Link to="/budget" className="nav-link">
+          Budget
+        </Link>
+        <Link to="/" className="nav-link">
+          Accounts
+        </Link>
+        <Link
+          to="/signin"
+          className="nav-link"
+          onClick={() => {
+            logout();
+          }}
+        >
+          Logout
+        </Link>
       </nav>
       <div className="profile-info">
-        <img src={user?.profileImage} alt="Profile" className="profile-image" />
-        <span className="user-name">{user?.name || 'Your Name'}</span>
+        <img
+          src="/Images/profile.jpg"
+          alt="Profile"
+          className="profile-image"
+        />
+        <span className="user-name">{user || 'Your Name'}</span>
       </div>
     </header>
   );

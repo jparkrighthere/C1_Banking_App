@@ -209,22 +209,11 @@ def get_accounts():
 @jwt_required()
 def get_identity():
     user_id = get_jwt_identity()
-    try:
-        user = users.find_one({'_id': ObjectId(user_id)})
-        if user:
-            accounts = user.get('connected_accounts', [])
-            identity_data = []
-            for item in accounts:
-                access_token_item = connected_accounts.find_one(
-                    {'_id': item}).get("access-token")
-                request = IdentityGetRequest(
-                    access_token=access_token_item
-                )
-                response = plaid_client.identity_get(request)
-                identity_data.append(response.to_dict())
-        return jsonify({'error': None, 'identity': identity_data})
-    except plaid.ApiException as e:
-        return jsonify(e)
+    user = users.find_one({'_id': ObjectId(user_id)})
+    user_name = user["name"]
+    
+    return jsonify({'identity': user_name})
+
 
 @app.route('/api/transactions', methods=['GET'])
 @jwt_required()
