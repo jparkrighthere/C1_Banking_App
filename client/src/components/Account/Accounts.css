@@ -42,4 +42,37 @@
   .accounts-list .account-item img {
     margin-right: 10px;
   }
+
+  .account-data-row {
+    border-bottom: 1px solid #ddd;
+    padding: 8px 24px;  /* Reduced padding for better alignment and space efficiency */
+    display: flex;  /* Changed from grid to flex for better inline alignment */
+    align-items: center;  /* Aligns items vertically in the center */
+  }
+  
+  .account-data-row__left {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;  /* Ensures it takes up the maximum available space */
+  }
+  
+  .logo {
+    width: 40px;  /* Reduced size */
+    height: auto;  /* Maintains aspect ratio */
+    margin-right: 12px;  /* Adds spacing between the logo and the text */
+  }
+  
+  .account-data-row__name {
+    font-size: 16px;
+    line-height: 24px;  /* Adjusted for better visual alignment */
+    font-weight: 500;
+  }
+  
+  .account-data-row__balance {
+    margin-left: auto;  /* Pushes the balance to the right */
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 500;
+  }
+  
   
