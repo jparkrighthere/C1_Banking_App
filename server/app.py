@@ -185,7 +185,7 @@ def get_access_token():
 
 @app.route('/api/accounts', methods=['GET'])
 @jwt_required()
-def get_accounts():
+def get_accounts(): 
     user_id = get_jwt_identity()
     try:
         user = users.find_one({'_id': ObjectId(user_id)})
