@@ -42,4 +42,37 @@
   .accounts-list .account-item img {
     margin-right: 10px;
   }
+
+  .account-data-row {
+    border-bottom: 1px solid #ddd;
+    padding: 8px 24px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .account-data-row__left {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+  }
+  
+  .logo {
+    width: 40px;
+    height: auto;
+    margin-right: 12px;
+  }
+  
+  .account-data-row__name {
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 500;
+  }
+  
+  .account-data-row__balance {
+    margin-left: auto;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 500;
+  }
+  
   

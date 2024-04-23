@@ -42,7 +42,7 @@ const App = () => {
     }
   }, [setToken]);
 
-  //  // Fetch accounts
+   // Fetch accounts
   //  const fetchAccounts = async () => {
   //   const response = await fetch('/api/accounts', {
   //     method: 'GET',

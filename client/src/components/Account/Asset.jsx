@@ -134,5 +134,4 @@ export default function NetWorth(props) {
 NetWorth.propTypes = {
     accounts: PropTypes.array.isRequired,
     numOfItems: PropTypes.number.isRequired,
-    userId: PropTypes.number.isRequired,
 };
