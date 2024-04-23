@@ -219,11 +219,11 @@ def get_identity():
 @jwt_required()
 def get_transactions():
     user_id = get_jwt_identity()
+    transactions_data = []
     try:
-        user = users.find_one({'_id': user_id})
+        user = users.find_one({'_id': ObjectId(user_id)})
         if user:
             accounts = user.get('connected_accounts', [])
-            transactions_data = []
             for item in accounts:
                 access_token_item = connected_accounts.find_one(
                     {'_id': item}).get("access-token")
