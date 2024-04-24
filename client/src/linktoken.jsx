@@ -78,7 +78,8 @@ const App = () => {
 
   return (
     <div style={{
-      marginTop: '15px'
+      marginTop: '15px',
+      marginBottom: '15px'
     }}>
       <button onClick={() => open()} disabled={!ready}>
         <strong>Link Account</strong>
@@ -94,6 +95,7 @@ const App = () => {
           })
           .then(res=>res.json())
           .then(data=> {
+            console.log("linktoken data:")
             console.log(data);
             setAccounts(data);
           })

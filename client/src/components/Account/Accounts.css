@@ -1,50 +1,19 @@
-.account-container {
-    font-family: Arial, sans-serif;
-    color: white;
-    background-color: black;
+  .page-container {
+    margin-left: 5%;
+    margin-top: 5%;
   }
   
-  .account-header {
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  .account-section {
+    margin-bottom: 0px;
   }
-  
-  .nav-links button {
-    margin-right: 10px;
-  }
-  
-  .profile-info {
-    display: flex;
-    align-items: center;
-  }
-  
-  .profile-info img {
-    border-radius: 50%;
-    margin-right: 10px;
-  }
-  
-  .account-main {
-    padding: 20px;
-  }
-  
-  .net-worth-summary, .financial-assets, .debt-summary {
-    margin-bottom: 20px;
-  }
-  
-  .accounts-list .account-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .accounts-list .account-item img {
-    margin-right: 10px;
+
+  .section-linebr {
+    color: #6a6a6a;
+    max-width: 95%;
+    margin-left: 0;
   }
 
   .account-data-row {
-    /* border-bottom: 1px solid #ddd; */
     margin-left: 0px;
     margin-bottom: 10px;
     display: flex;
@@ -57,13 +26,7 @@
     align-items: center;
     flex-grow: 1;
   }
-  
-  .logo {
-    width: 40px;
-    height: auto;
-    margin-right: 12px;
-  }
-  
+
   .account-data-row__name {
     font-size: 16px;
     line-height: 24px;
@@ -76,23 +39,10 @@
     line-height: 24px;
     font-weight: 500;
   }
+
+  .logo {
+    width: 40px;
+    height: auto;
+    margin-right: 12px;
+  }
   
-  .page-container {
-    margin-left: 5%;
-    margin-top: 56px;
-
-  }
-
-  .account-section {
-    margin-bottom: 0px;
-  }
-
-  .link-accounts {
-    margin-bottom: 0px;
-  }
-
-  .section-linebr {
-    color: #6a6a6a;
-    max-width: 95%;
-    margin-left: 0;
-  }
