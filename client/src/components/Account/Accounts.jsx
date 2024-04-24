@@ -48,7 +48,7 @@ const AccountPage = () => {
       },
     });
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
   }
   
 
@@ -85,9 +85,7 @@ const AccountPage = () => {
             </div>
           ))}
         </div>
-
         <div><App /></div>
-
       </div>
     </div>
   );
