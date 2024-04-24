@@ -45,4 +45,11 @@
     height: auto;
     margin-right: 12px;
   }
+
+  .account-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 80px;
+  }
   

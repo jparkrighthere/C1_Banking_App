@@ -4,7 +4,7 @@ import AuthContext from './AuthContext';
 
 const App = () => {
   const [linkToken, setToken] = useState(null);
-  const [accounts, setAccounts] = useState([]);
+  // const [accounts, setAccounts] = useState([]);
   const { authToken } = useContext(AuthContext);
 
   // Set access token
@@ -84,7 +84,7 @@ const App = () => {
       <button onClick={() => open()} disabled={!ready}>
         <strong>Link Account</strong>
       </button>
-      <button
+      {/* <button
         onClick={() =>
           fetch('/api/transactions', {
             method: 'GET',
@@ -109,7 +109,7 @@ const App = () => {
             <pre>{JSON.stringify(account, null, 2)}</pre>
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };

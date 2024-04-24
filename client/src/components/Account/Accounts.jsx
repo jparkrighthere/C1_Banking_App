@@ -58,8 +58,10 @@ const AccountPage = () => {
           />
         </div>
 
-        <div>
-        <h4 className='account-section'>Accounts</h4>
+        <div className='account-header'>
+          <h3 className='account-section'>Accounts</h3>
+          <App />
+        </div>
         <hr className='section-linebr' color='#6a6a6a'></hr>
           {accounts.map((account, index) => (
             <div key={index} className="account-data-row">
@@ -72,8 +74,6 @@ const AccountPage = () => {
               </div>
             </div>
           ))}
-        </div>
-        <div><App /></div>
       </div>
     </div>
   );
