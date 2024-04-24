@@ -77,7 +77,6 @@ export default function NetWorth(props) {
   localStorage.setItem('cash-in', assets);
   const liabilities = loan + credit;
 
-
   return (
     <>
       <h2 className="netWorthHeading">Net Worth</h2>

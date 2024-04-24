@@ -24,12 +24,7 @@
     margin-bottom: 2%;
   }
 
-  .firstRow {
-    display: flex;
-    margin-bottom: 1%;
-  }
-  
-  .secondRow {
+  .row {
     display: flex;
     margin-bottom: 1%;
   }
@@ -78,6 +73,31 @@
   
   .spendingInsightData {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    /* grid-template-columns: 1fr 1fr; */
   }
-  
+
+  .transactionRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: 10px; /* Adjust margin between rows as needed */
+  }
+
+  .leftColumn {
+    padding-right: 10px; /* Adjust spacing between left and right columns */
+  }
+
+  .leftColumn p{
+    margin: 0;
+  }
+
+  .rightColumn {
+    text-align: right;
+  }
+
+  .altLeftColumn {
+    padding-right: 10px;
+  }
+
+  .date {
+    opacity: 30%;
+  }
