@@ -13,7 +13,7 @@ const pluralize = (word, count) => {
 
 export default function SpendingInsight(props) {
     const transactions = props.transactions;
-
+    const recentTrans = transactions.slice(0, 5);
     const monthlyTransactions = useMemo(() => {
         const today = new Date();
         const oneMonthAgo = new Date(new Date().setDate(today.getDate() - 30));
@@ -75,6 +75,20 @@ export default function SpendingInsight(props) {
                                 <React.Fragment key={vendor}>
                                     <p>{vendor}</p>
                                     <p>{currencyFilter(amount)}</p>
+                                </React.Fragment>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+                <div className="recentDataBox">
+                    <div className="holdingsList">
+                        <h4 className="holdingsHeading">Recent Purchases</h4>
+                        <div className="spendingInsightData">
+                            <p className="title">Vendor</p> <p className="title">Date</p>
+                            {recentTrans.map(tx => (
+                                <React.Fragment key={tx.id}>
+                                    <p>{tx.name}</p>
+                                    <p>{tx.date}</p>
                                 </React.Fragment>
                             ))}
                         </div>

@@ -1,10 +1,12 @@
 .monthlySpendingHeading {
     margin-top: 56px;
     margin-bottom: 0;
+    transform: translate(20%);
   }
   
   .tableSubHeading {
     margin-top: 8px;
+    transform: translate(20%);
   }
   
   .monthlySpendingText {
@@ -13,10 +15,12 @@
     font-size: 16px;
     letter-spacing: 1px;
     text-transform: uppercase;
+    transform: translate(20%);
   }
   
   .monthlySpendingContainer {
     display: flex;
+    transform: translate(20%);
   }
   
   .userDataBox {
@@ -24,6 +28,14 @@
     min-height: 320px;
     border: 1px solid #fff;
     margin-right: 16px;
+  }
+
+  .recentDataBox {
+    width: 552px;
+    min-height: 320px;
+    border: 1px solid #fff;
+    margin-right: 16px;
+    transform: translate(-155%, 103%);
   }
   
   .holdingsList {
