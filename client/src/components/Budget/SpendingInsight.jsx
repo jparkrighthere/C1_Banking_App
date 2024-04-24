@@ -62,45 +62,58 @@ export default function SpendingInsight(props) {
         <div>
             <h2 className="monthlySpendingHeading">Spending Insights</h2>
             <p className="tableSubHeading">An overview of your recent spending</p>
-            <div className="monthlySpendingText">{`Overall breakdown across ${props.numOfItems} bank ${pluralize('account', props.numOfItems)}`}</div>
-            <div className="monthlySpendingContainer">
-                <div className="userDataBox">
-                    <DonutChart data={categoriesData} />
-                </div>
-                <div className="userDataBox">
-                    <div className="holdingsList">
-                        <h4 className="holdingsHeading">Top 5 Vendors</h4>
-                        <div className="spendingInsightData">
-                            <p className="title">Vendor</p> <p className="title">Amount</p>
-                            {sortedNames.map(([vendor, amount]) => (
-                                <React.Fragment key={vendor}>
-                                    <p>{vendor}</p>
-                                    <p>{currencyFilter(amount)}</p>
-                                </React.Fragment>
-                            ))}
+            { /*<div className="monthlySpendingText">{`Overall breakdown across ${props.numOfItems} bank ${pluralize('account', props.numOfItems)}`}</div> */}
+            <hr color='#6a6a6a' className='widget-linebr'></hr>
+            
+            <div>
+                <div className='secondRow'>
+                    <div className="barChartBox">
+                        <div className="holdingsList">
+                            <h4 className="holdingsHeading">Cash-In and Cash-Out</h4>
+                            <BarChartComponent />
+                        </div>
+                    </div>
+                    
+                    <div className="transactionsBox">
+                        <div className="holdingsList">
+                            <h4 className="holdingsHeading">Recent Transactions</h4>
+                            <div className="spendingInsightData">
+                                <p className="title">Vendor</p> <p className="title">Date</p>
+                                {recentTrans.map(tx => (
+                                    <React.Fragment key={tx.name}>
+                                        <p>{tx.name}</p>
+                                        <p>{tx.date}</p>
+                                    </React.Fragment>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div className="recentDataBox">
-                    <div className="holdingsList">
-                        <h4 className="holdingsHeading">Recent Transactions</h4>
-                        <div className="spendingInsightData">
-                            <p className="title">Vendor</p> <p className="title">Date</p>
-                            {recentTrans.map(tx => (
-                                <React.Fragment key={tx.name}>
-                                    <p>{tx.name}</p>
-                                    <p>{tx.date}</p>
-                                </React.Fragment>
-                            ))}
+
+                <p className='tableSubHeading'>Spending Details</p>
+                <hr color='#6a6a6a' className='widget-linebr'></hr>
+
+                <div className='firstRow'>
+                    <div className="donutChartBox">
+                        <DonutChart data={categoriesData} />
+                    </div>
+
+                    <div className="vendorsBox">
+                        <div className="holdingsList">
+                            <h4 className="holdingsHeading">Top Places</h4>
+                            <div className="spendingInsightData">
+                                <p className="title">Vendor</p> <p className="title">Amount</p>
+                                {sortedNames.map(([vendor, amount]) => (
+                                    <React.Fragment key={vendor}>
+                                        <p>{vendor}</p>
+                                        <p>{currencyFilter(amount)}</p>
+                                    </React.Fragment>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div className="recentDataBox">
-                    <div className="holdingsList">
-                        <h4 className="holdingsHeading">Cash-In and Cash-Out</h4>
-                        <BarChartComponent />
-                    </div>
-                </div>
+
             </div>
         </div>
     );
