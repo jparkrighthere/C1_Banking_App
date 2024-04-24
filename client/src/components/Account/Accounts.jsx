@@ -56,7 +56,13 @@ const AccountPage = () => {
       },
     });
     const data = await response.json();
-    console.log(data);
+    const cashout = data.reduce((acc, transaction) => {
+      if (transaction.amount > 0) {
+          acc += transaction.amount;
+      }
+      return acc;
+    }, 0);
+    localStorage.setItem('cash-out', cashout);
   }
   
   return (
