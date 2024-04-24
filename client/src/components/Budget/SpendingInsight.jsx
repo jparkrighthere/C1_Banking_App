@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { DonutChart } from './donutChart';
 import PropTypes from 'prop-types';
 import './SpendingInsight.css';
+import { BarChartComponent } from './barChart';
 
 const currencyFilter = (amount) => {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
@@ -86,12 +87,18 @@ export default function SpendingInsight(props) {
                         <div className="spendingInsightData">
                             <p className="title">Vendor</p> <p className="title">Date</p>
                             {recentTrans.map(tx => (
-                                <React.Fragment key={tx.id}>
+                                <React.Fragment key={tx.name}>
                                     <p>{tx.name}</p>
                                     <p>{tx.date}</p>
                                 </React.Fragment>
                             ))}
                         </div>
+                    </div>
+                </div>
+                <div className="recentDataBox">
+                    <div className="holdingsList">
+                        <h4 className="holdingsHeading">Cash-In and Cash-Out</h4>
+                        <BarChartComponent />
                     </div>
                 </div>
             </div>
