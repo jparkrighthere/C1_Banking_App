@@ -1,5 +1,6 @@
 import { PieChart, Pie, Cell, Legend } from "recharts";
 import { sampleTransactions } from "./spendingInsightData";
+import "./budget.css";
 
 export const DonutChart = () => {
     const colors = [
@@ -12,7 +13,8 @@ export const DonutChart = () => {
     ];
 
     return (
-        <div className="holdingsList">
+        <div className="chart">
+            <h4 className="widget-header">Top Categories</h4>
             <PieChart width={500} height={300}>
                 <Pie
                     data={sampleTransactions}

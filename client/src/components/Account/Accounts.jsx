@@ -60,27 +60,37 @@ const AccountPage = () => {
   return (
     <div>
       <Header />
-      <NetWorth
-        accounts={accounts}
-        numOfItems={accounts.length}
-      />
-      <App />
-      <div>
-        {accounts.map((account, index) => (
-          <div key={index} className="account-data-row">
-            <div className="account-data-row__left">
-              <img src="/Images/logo2.png" alt="Capital One Logo" className="logo" />
-              <div className="account-data-row__name">{account.accountName} Account</div>
+      <div className='page-container'>
+
+        <div>
+          <NetWorth
+            accounts={accounts}
+            numOfItems={accounts.length}
+          />
+        </div>
+
+        <div>
+        
+        <h4 className='account-section'>Accounts</h4>
+        <hr className='section-linebr' color='#6a6a6a'></hr>
+          {accounts.map((account, index) => (
+            <div key={index} className="account-data-row">
+              <div className="account-data-row__left">
+                <img src="/Images/logo2.png" alt="Capital One Logo" className="logo" />
+                <div className="account-data-row__name">{account.accountName} Account</div>
+              </div>
+              <div className="account-data-row__balance">
+                {`${startCase(toLower(account.subtype))} • ${currencyFilter(account.current_balance)}`}
+              </div>
             </div>
-            <div className="account-data-row__balance">
-              {`${startCase(toLower(account.subtype))} • Balance ${currencyFilter(account.current_balance)}`}
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
+
+        <div><App /></div>
+
       </div>
     </div>
   );
 };
-
 
 export default AccountPage;

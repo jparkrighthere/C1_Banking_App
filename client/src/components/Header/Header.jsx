@@ -22,10 +22,10 @@ const Header = () => {
 
   return (
     <header className="header">
-      <img src="/Images/logo2.png" alt="Capital One Logo" className="logo" />
+      <img src="/Images/logo2.png" alt="Capital One Logo" className="c1-logo" />
       <nav className="navigation">
         <Link to="/budget" className="nav-link">
-          Budget
+          Budgeting
         </Link>
         <Link to="/" className="nav-link">
           Accounts
@@ -46,7 +46,7 @@ const Header = () => {
           alt="Profile"
           className="profile-image"
         />
-        <span className="user-name">{user || 'Your Name'}</span>
+        <span className="user-name">{user || ''}</span>
       </div>
     </header>
   );

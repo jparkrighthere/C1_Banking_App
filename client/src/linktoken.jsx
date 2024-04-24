@@ -77,9 +77,11 @@ const App = () => {
   }, [createLinkToken,linkToken, isOauth, ready, open]);
 
   return (
-    <div>
+    <div style={{
+      marginTop: '15px'
+    }}>
       <button onClick={() => open()} disabled={!ready}>
-        <strong>Link account</strong>
+        <strong>Link Account</strong>
       </button>
       <button
         onClick={() =>
