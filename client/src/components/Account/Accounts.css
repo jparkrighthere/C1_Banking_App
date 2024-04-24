@@ -44,10 +44,12 @@
   }
 
   .account-data-row {
-    border-bottom: 1px solid #ddd;
-    padding: 8px 24px;
+    /* border-bottom: 1px solid #ddd; */
+    margin-left: 0px;
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
+    max-width: 95%;
   }
   
   .account-data-row__left {
@@ -69,10 +71,28 @@
   }
   
   .account-data-row__balance {
-    margin-left: auto;
+    margin-left: 0;
     font-size: 16px;
     line-height: 24px;
     font-weight: 500;
   }
   
-  
+  .page-container {
+    margin-left: 5%;
+    margin-top: 56px;
+
+  }
+
+  .account-section {
+    margin-bottom: 0px;
+  }
+
+  .link-accounts {
+    margin-bottom: 0px;
+  }
+
+  .section-linebr {
+    color: #6a6a6a;
+    max-width: 95%;
+    margin-left: 0;
+  }

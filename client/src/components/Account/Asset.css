@@ -3,23 +3,23 @@
 }
 
 .netWorthHeading {
-    margin-top: 8px;
+    margin-top: 5%;
+    margin-bottom: 0px;
 }
 
-.tableSubHeading {
-    margin-top: 8px;
+.netWorthsubHeading {
+    margin-top: 5px;
 }
 
 .netWorthText {
-    margin-bottom: 32px;
-    font-family: monospace;
     font-size: 16px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
+    margin-top: 5px;
 }
 
 .netWorthDollars {
-    margin-top: 4px;
+    margin-top: 0px;
+    font-weight: 600;
+    margin-bottom: 1px;
 }
 
 .holdingsContainer {
@@ -29,7 +29,7 @@
 .userDataBox {
     width: 276px;
     min-height: 160px;
-    border: 1px solid #D3D3D3;
+    border: 1px solid #6a6a6a;
     margin-right: 8px;
 }
 
@@ -70,4 +70,9 @@
 .dollarsHeading {
     font-weight: bold;
     margin-top: 0;
+}
+
+.widgets-container {
+    margin-top: 15px;
+    display: flex;
 }

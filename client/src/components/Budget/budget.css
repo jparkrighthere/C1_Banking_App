@@ -21,7 +21,11 @@
     opacity: 20%;
 }
 
-.widget-title {
-    font-weight: 300;
-    font-size: larger;
+.chart {
+    margin-left: 5%;
+}
+
+.widget-header {
+    margin-top: 33px;
+    margin-bottom: 0px;
 }

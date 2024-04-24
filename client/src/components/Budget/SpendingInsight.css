@@ -10,13 +10,12 @@
   }
   
   .monthlySpendingText {
-    margin-bottom: 32px;
-    font-family: monospace;
+    margin-bottom: 30px;
     font-size: 16px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
+    margin-top: 15px;
+    font-weight: 500;
     transform: translate(20%);
-  }
+}
   
   .monthlySpendingContainer {
     display: flex;
@@ -26,14 +25,14 @@
   .userDataBox {
     width: 552px;
     min-height: 320px;
-    border: 1px solid #fff;
+    border: 1px solid #6a6a6a;
     margin-right: 16px;
   }
 
   .recentDataBox {
     width: 552px;
     min-height: 320px;
-    border: 1px solid #fff;
+    border: 1px solid #6a6a6a;
     margin-right: 16px;
     transform: translate(-155%, 103%);
   }

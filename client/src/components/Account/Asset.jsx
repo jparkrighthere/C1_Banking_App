@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { PieChart, Pie, Legend, Cell } from 'recharts'; 
+import { PieChart, Pie, Legend, Cell, LineChart } from 'recharts'; 
 import './Asset.css';
 import colors from 'plaid-threads/scss/colors';
 
@@ -45,17 +45,18 @@ export default function NetWorth(props) {
   return (
     <div>
       <h2 className="netWorthHeading">Net Worth</h2>
-      <h4 className="tableSubHeading">
-        A summary of your assets and liabilities
-      </h4>
+      <p className='netWorthsubHeading'> A summary of your assets and liabilities </p>
       <>
-        <div className="netWorthText">{`Your total across ${
+        <div className="netWorthText">{`Total across ${
             props.numOfItems
-            } bank ${pluralize('account', props.numOfItems)}`}</div>
+            } bank ${pluralize('account', props.numOfItems)}:`}</div>
             <h2 className="netWorthDollars">
             {currencyFilter(assets + liabilities)}
             </h2>
-            <div className="holdingsContainer">
+            <hr color='#6a6a6a' className='section-linebr'></hr>
+
+            <div className="widgets-container">
+
                 <div className="userDataBox">
                     <div className="holdingsList">
                         <h4 className="holdingsHeading">Assets</h4>
@@ -89,6 +90,7 @@ export default function NetWorth(props) {
                       </PieChart>
                     </div>
                 </div>
+                
                 <div className="userDataBox">
                     <div className="holdingsList">
                       <h4 className="holdingsHeading">Liabilities</h4>
@@ -125,6 +127,7 @@ export default function NetWorth(props) {
                       </PieChart>
                     </div>
                 </div>
+
             </div>
         </>
     </div>

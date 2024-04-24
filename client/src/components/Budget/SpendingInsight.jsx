@@ -59,9 +59,9 @@ export default function SpendingInsight(props) {
 
     return (
         <div>
-            <h2 className="monthlySpendingHeading">Monthly Spending</h2>
-            <h4 className="tableSubHeading">A breakdown of your monthly spending</h4>
-            <div className="monthlySpendingText">{`Monthly breakdown across ${props.numOfItems} bank ${pluralize('account', props.numOfItems)}`}</div>
+            <h2 className="monthlySpendingHeading">Spending Insights</h2>
+            <p className="tableSubHeading">An overview of your recent spending</p>
+            <div className="monthlySpendingText">{`Overall breakdown across ${props.numOfItems} bank ${pluralize('account', props.numOfItems)}`}</div>
             <div className="monthlySpendingContainer">
                 <div className="userDataBox">
                     <DonutChart data={categoriesData} />
@@ -82,7 +82,7 @@ export default function SpendingInsight(props) {
                 </div>
                 <div className="recentDataBox">
                     <div className="holdingsList">
-                        <h4 className="holdingsHeading">Recent Purchases</h4>
+                        <h4 className="holdingsHeading">Recent Transactions</h4>
                         <div className="spendingInsightData">
                             <p className="title">Vendor</p> <p className="title">Date</p>
                             {recentTrans.map(tx => (
