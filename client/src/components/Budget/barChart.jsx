@@ -1,17 +1,16 @@
-import { BarChart, XAxis, YAxis, Bar, Legend } from "recharts";
+import { BarChart, YAxis, Bar, Legend } from "recharts";
 import "./budget.css";
 
 export const BarChartComponent = () => {
-    const data = [
-        { name: "Jan", "cash-in": 4000, "cash-out": 2400 }
-    ];
-    const cashOut = data[0]["cash-out"];
-    const cashIn = data[0]["cash-in"];
+    const cashOut =localStorage.getItem("cash-out");
+    const cashIn = localStorage.getItem("cash-in");
     const averageSavings = cashIn - cashOut;
+    const data = [
+        { "cash-in": cashIn, "cash-out": cashOut }
+    ];
     return (
         <div className="chart">
             <BarChart width={400} height={250} data={data}>
-                <XAxis dataKey="name" />
                 <YAxis />
                 <Legend />
                 <Bar dataKey="cash-in" fill="#8884d8" />

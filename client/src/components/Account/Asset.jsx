@@ -74,6 +74,7 @@ export default function NetWorth(props) {
   const credit = addAllAccounts(['credit card']);
 
   const assets = depository + investment;
+  localStorage.setItem('cash-in', assets);
   const liabilities = loan + credit;
 
 
