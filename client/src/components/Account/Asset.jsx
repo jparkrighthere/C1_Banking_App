@@ -37,7 +37,6 @@ export default function NetWorth(props) {
     const data = await response.json();
     console.log("transaction data obtained");
     setTransactions(data);
-    console.log(data)
   }
 
   useEffect(() => {
