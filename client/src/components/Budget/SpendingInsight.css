@@ -1,42 +1,72 @@
 .monthlySpendingHeading {
-    margin-top: 56px;
-    margin-bottom: 0;
-    transform: translate(20%);
+    margin-top: 4%;
+    margin-bottom: 0px;
+    margin-left: 5%;
   }
   
   .tableSubHeading {
     margin-top: 8px;
-    transform: translate(20%);
+    margin-left: 5%;
   }
   
   .monthlySpendingText {
-    margin-bottom: 30px;
+    margin-bottom: 15px;
     font-size: 16px;
-    margin-top: 15px;
-    font-weight: 500;
-    transform: translate(20%);
+    margin-top: 5px;
+    font-weight: 400;
+    margin-left: 5%;
 }
   
-  .monthlySpendingContainer {
-    display: flex;
-    transform: translate(20%);
-  }
-  
-  .userDataBox {
-    width: 552px;
-    min-height: 320px;
-    border: 1px solid #6a6a6a;
-    margin-right: 16px;
+  .widget-linebr {
+    color: #6a6a6a;
+    max-width: 90%;
+    margin-left: 5%;
+    margin-bottom: 2%;
   }
 
-  .recentDataBox {
-    width: 552px;
-    min-height: 320px;
-    border: 1px solid #6a6a6a;
-    margin-right: 16px;
-    transform: translate(-206%, 103%);
+  .firstRow {
+    display: flex;
+    margin-bottom: 1%;
   }
   
+  .secondRow {
+    display: flex;
+    margin-bottom: 1%;
+  }
+
+  .donutChartBox {
+    width: 30%;
+    border: 1px solid #6a6a6a;
+    margin-left: 16.5%;
+  }
+
+  .vendorsBox {
+    width: 30%;
+    min-height: 320px;
+    border: 1px solid #6a6a6a;
+    margin-left: 8%;
+  }
+
+
+  .transactionsBox {
+    height: 60%;
+    width: 25%;
+    border: 1px solid #6a6a6a;
+    margin-right: 16px;
+    margin-left: 2%;
+    margin-bottom: 2%;
+  }
+  
+  .barChartBox {
+    width: 25%;
+    min-height: 320px;
+    border: 1px solid #6a6a6a;
+    margin-right: 2%;
+    margin-left: 23.25%;
+    margin-bottom: 2%;
+  }
+
+
   .holdingsList {
     padding: 32px;
   }
