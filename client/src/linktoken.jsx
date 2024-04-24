@@ -6,7 +6,6 @@ import AuthContext from './AuthContext';
 const LinkToken = (props) => {
   const [linkToken, setToken] = useState(null);
   const [testAccounts, setTestAccounts] = useState([]);
-
   const { authToken } = useContext(AuthContext);
   const { fetchAccounts } = props;
   // Set access token
@@ -65,15 +64,15 @@ const LinkToken = (props) => {
   }, [createLinkToken, linkToken, isOauth, ready, open]);
 
   return (
-    <div
-      style={{
-        marginTop: '15px',
-      }}
-    >
+
+    <div style={{
+      marginTop: '15px',
+      marginBottom: '15px'
+    }}>
       <button onClick={() => open()} disabled={!ready}>
         <strong>Link Account</strong>
       </button>
-      <button
+      {/* <button
         onClick={() =>
           fetch('/api/liabilities', {
             method: 'GET',
@@ -97,7 +96,7 @@ const LinkToken = (props) => {
             <pre>{JSON.stringify(account, null, 2)}</pre>
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };
