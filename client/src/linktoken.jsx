@@ -1,31 +1,31 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState, useCallback, useContext } from "react";
 import { usePlaidLink } from "react-plaid-link";
 import AuthContext from './AuthContext'; 
 
-const App = () => {
+const LinkToken = (props) => {
   const [linkToken, setToken] = useState(null);
-  const [accounts, setAccounts] = useState([]);
-  const { authToken } = useContext(AuthContext);
+  const [testAccounts, setTestAccounts] = useState([]);
 
+  const { authToken } = useContext(AuthContext);
+  const { fetchAccounts } = props;
   // Set access token
   const onSuccess = useCallback(async (publicToken) => {
     const response = await fetch('/api/set_access_token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-         Authorization: `Bearer ${authToken}`,
+        Authorization: `Bearer ${authToken}`,
       },
 
       body: JSON.stringify({ public_token: publicToken }),
     });
-    const data = response.json()
-    console.log(data);
-
+    fetchAccounts();
   }, []);
 
   // Creates a Link token
   const createLinkToken = useCallback(async () => {
-    if (window.location.href.includes("?oauth_state_id=")) {
+    if (window.location.href.includes('?oauth_state_id=')) {
       const token = localStorage.getItem('link_token'); // For OAuth, use previously generated Link token
       setToken(token);
     } else {
@@ -42,26 +42,14 @@ const App = () => {
     }
   }, [setToken]);
 
-   // Fetch accounts
-  //  const fetchAccounts = async () => {
-  //   const response = await fetch('/api/accounts', {
-  //     method: 'GET',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       Authorization: `Bearer ${authToken}`,
-  //     },
-  //   });
-  //   const data = await response.json();
-  //   setAccounts(data);
-  // };
-
   let isOauth = false;
   const config = {
-    token:linkToken,
+    token: linkToken,
     onSuccess,
   };
+
   // For OAuth, configure the received redirect URI
-  if (window.location.href.includes("?oauth_state_id=")) {
+  if (window.location.href.includes('?oauth_state_id=')) {
     config.receivedRedirectUri = window.location.href;
     isOauth = true;
   }
@@ -74,35 +62,37 @@ const App = () => {
     if (isOauth && ready) {
       open();
     }
-  }, [createLinkToken,linkToken, isOauth, ready, open]);
+  }, [createLinkToken, linkToken, isOauth, ready, open]);
 
   return (
-    <div style={{
-      marginTop: '15px'
-    }}>
+    <div
+      style={{
+        marginTop: '15px',
+      }}
+    >
       <button onClick={() => open()} disabled={!ready}>
         <strong>Link Account</strong>
       </button>
       <button
         onClick={() =>
-          fetch('/api/transactions', {
+          fetch('/api/liabilities', {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${authToken}`,
             },
           })
-          .then(res=>res.json())
-          .then(data=> {
-            console.log(data);
-            setAccounts(data);
-          })
+            .then((res) => res.json())
+            .then((data) => {
+              console.log(data);
+              setTestAccounts(data);
+            })
         }
       >
         <strong>Test</strong>
       </button>
       <div>
-        {accounts.map((account, index) => (
+        {testAccounts.map((account, index) => (
           <div key={index}>
             <pre>{JSON.stringify(account, null, 2)}</pre>
           </div>
@@ -112,4 +102,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default LinkToken;

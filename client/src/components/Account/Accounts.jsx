@@ -1,4 +1,4 @@
-import App from '../../linktoken';
+import LinkToken from '../../linktoken';
 import Header from '../Header/Header';
 import NetWorth from './Asset';
 import { useContext, useEffect, useState } from 'react';
@@ -19,6 +19,12 @@ function currencyFilter(value) {
 const AccountPage = () => {
   const { authToken } = useContext(AuthContext);
   const [accounts, setAccounts] = useState([]);
+ 
+
+    useEffect(() => {
+      fetchAccounts();
+      fetchTransactions();
+    }, []);
 
   const fetchAccounts = async () => {
     const response = await fetch('/api/accounts', {
@@ -27,6 +33,7 @@ const AccountPage = () => {
         Authorization: `Bearer ${authToken}`,
       },
     });
+
     const data = await response.json();
     if (data.length > 0) {
       const accountsData = data.flatMap(entry => 
@@ -36,6 +43,7 @@ const AccountPage = () => {
           current_balance: account.balances.current
         }))
       );
+       console.log(data);
       setAccounts(accountsData);
     }
   };
@@ -48,44 +56,43 @@ const AccountPage = () => {
       },
     });
     const data = await response.json();
-    // console.log(data);
+    console.log(data);
   }
   
-
-  useEffect(() => {
-    fetchAccounts();
-    fetchTransactions();
-  }, []);
-
   return (
     <div>
       <Header />
-      <div className='page-container'>
-
+      <div className="page-container">
         <div>
-          <NetWorth
-            accounts={accounts}
-            numOfItems={accounts.length}
-          />
+          <NetWorth accounts={accounts} numOfItems={accounts.length} />
         </div>
 
         <div>
-        
-        <h4 className='account-section'>Accounts</h4>
-        <hr className='section-linebr' color='#6a6a6a'></hr>
+          <h4 className="account-section">Accounts</h4>
+          <hr className="section-linebr" color="#6a6a6a"></hr>
           {accounts.map((account, index) => (
             <div key={index} className="account-data-row">
               <div className="account-data-row__left">
-                <img src="/Images/logo2.png" alt="Capital One Logo" className="logo" />
-                <div className="account-data-row__name">{account.accountName} Account</div>
+                <img
+                  src="/Images/logo2.png"
+                  alt="Capital One Logo"
+                  className="logo"
+                />
+                <div className="account-data-row__name">
+                  {account.accountName} Account
+                </div>
               </div>
               <div className="account-data-row__balance">
-                {`${startCase(toLower(account.subtype))} • ${currencyFilter(account.current_balance)}`}
+                {`${startCase(toLower(account.subtype))} • ${currencyFilter(
+                  account.current_balance
+                )}`}
               </div>
             </div>
           ))}
         </div>
-        <div><App /></div>
+        <div>
+          <LinkToken setAccounts={setAccounts} fetchAccounts={fetchAccounts} />
+        </div>
       </div>
     </div>
   );

@@ -22,6 +22,7 @@ from plaid.model.transactions_get_request import TransactionsGetRequest
 from plaid.model.transactions_sync_request import TransactionsSyncRequest
 from plaid.model.accounts_get_request import AccountsGetRequest
 from plaid.model.products import Products
+from plaid.model.liabilities_get_request import LiabilitiesGetRequest
 from plaid.api import plaid_api
 
 
@@ -60,6 +61,7 @@ plaid_client = plaid_api.PlaidApi(api_client)
 products = []
 for product in PLAID_PRODUCTS:
     products.append(Products(product))
+
 
 mongo_client = MongoClient(mongo_uri, tlsCAFile=certifi.where())
 
@@ -201,6 +203,28 @@ def get_accounts():
                 response = plaid_client.accounts_get(request)
                 account_data.append(response.to_dict())
         return jsonify(account_data)
+    except plaid.ApiException as e:
+        return jsonify(e)
+    
+
+@app.route('/api/liabilities', methods=['GET'])
+@jwt_required()
+def get_liabilities():
+    user_id = get_jwt_identity()
+    try:
+        user = users.find_one({'_id': ObjectId(user_id)})
+        if user:
+            accounts = user.get('connected_accounts', [])
+            liabilities_data = []
+            for item in accounts:
+                access_token_item = connected_accounts.find_one(
+                    {'_id': item}).get("access-token")
+
+                request = LiabilitiesGetRequest(access_token=access_token_item)
+                response = plaid_client.liabilities_get(request)
+                liabilities = response['liabilities']
+                liabilities_data.append(liabilities.to_dict())
+        return jsonify(liabilities_data)
     except plaid.ApiException as e:
         return jsonify(e)
     
