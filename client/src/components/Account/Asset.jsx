@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { PieChart, Pie, Legend, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid} from 'recharts'; 
+import { PieChart, Pie, Legend, Cell, LineChart, Line, XAxis, YAxis} from 'recharts'; 
 import './Asset.css';
 import colors from 'plaid-threads/scss/colors';
 import { useContext, useEffect, useState } from 'react';
@@ -42,7 +42,6 @@ export default function NetWorth(props) {
 
   useEffect(() => {
     fetchTransactions();
-    //temp();
   }, [])
 
   // line chart data processing
@@ -50,13 +49,6 @@ export default function NetWorth(props) {
     date: new Date(transaction.date).toISOString().slice(0,10),
     amount: transaction.amount,
   })).sort((a, b) => new Date(a.date) - new Date(b.date));
-
-  const temp = async() => {
-    for (let i = 0; i < transactions.length; i++) {
-      const obj = transactions[i];
-      console.log(obj.category[0]);
-    }
-  }
 
   // sums of account types
   const addAllAccounts = (
