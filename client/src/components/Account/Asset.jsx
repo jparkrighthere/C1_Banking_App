@@ -5,9 +5,14 @@ import colors from 'plaid-threads/scss/colors';
 import { useContext, useEffect, useState } from 'react';
 import AuthContext from '../../AuthContext';
 
-const currencyFilter = (amount) => {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
-};
+function currencyFilter(value) {
+
+  const isNegative = value < 0;
+  const displayValue = value < 0 ? -value : value;
+  return `${isNegative ? '-' : ''}$${displayValue
+    .toFixed(2)
+    .replace(/(\d)(?=(\d{3})+(\.|$))/g, '$1,')}`;
+}
 
 const pluralize = (word, count) => {
     return count === 1 ? word : word + 's';
@@ -36,6 +41,7 @@ export default function NetWorth(props) {
     });
     const data = await response.json();
     console.log("transaction data obtained");
+    console.log(data);
     setTransactions(data);
   }
 
@@ -79,7 +85,7 @@ export default function NetWorth(props) {
         <div className="netWorthText">{`Total across ${
             props.numOfItems
             } bank ${pluralize('account', props.numOfItems)}:`}</div>
-            <h2 className="netWorthDollars"> {currencyFilter(assets + liabilities)} </h2>
+            <h2 className="netWorthDollars"> {currencyFilter(assets)} </h2>
             <hr color='#6a6a6a' className='section-linebr'></hr>
 
             <div className='lineChartBox'>
@@ -102,29 +108,27 @@ export default function NetWorth(props) {
                           <h4 className="dollarsHeading">{currencyFilter(assets)}</h4>
                       </div>
                       <PieChart width={500} height={300}>
-                          <Pie
-                              data={props.accounts.filter( a => a.current_balance >= 0)}
-                              dataKey="current_balance"
-                              nameKey="subtype"
-                              outerRadius={90}
-                              innerRadius={70}
-                              label={({ current_balance }) =>
-                                  `$ ${current_balance}`
-                              }
-                              stroke="#242424"
-                              cx="50%"
-                              cy="50%"
-                              paddingAngle={5}
-                            >
-                              {props.accounts.filter( a => a.current_balance >= 0).map((subtype, index) => (
-                                  <Cell key={`cell-${subtype}`} fill={COLORS[index % COLORS.length]} />
-                              ))}
-                          </Pie>
-                          <Legend
+                        <Pie
+                          data={props.accounts.filter(a => ['checking', 'savings', 'cd', 'money market', 'ira', '401k'].includes(a.subtype))}
+                          dataKey="current_balance"
+                          nameKey="subtype"
+                          outerRadius={90}
+                          innerRadius={70}
+                          label={({ current_balance }) => `${currencyFilter(current_balance)}`}
+                          stroke="#242424"
+                          cx="50%"
+                          cy="50%"
+                          paddingAngle={5}
+                        >
+                          {props.accounts.filter(a => ['checking', 'savings', 'cd', 'money market', 'ira', '401k'].includes(a.subtype)).map((account, index) => (
+                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Legend
                           layout="vertical"
                           align="left"
                           verticalAlign="middle"
-                          />
+                        />
                       </PieChart>
                     </div>
                 </div>
@@ -133,35 +137,33 @@ export default function NetWorth(props) {
                     <div className="holdingsList">
                       <h4 className="holdingsHeading">Liabilities</h4>
                       <div className="assetsHeaderContainer">
-                        <h4 className="dollarsHeading">{currencyFilter(liabilities)}</h4>
+                        <h4 className="dollarsHeading">-{currencyFilter(liabilities)}</h4>
                       </div>
                       <PieChart width={500} height={300}>
-                          <Pie
-                             data={props.accounts.filter(a => a.current_balance < 0).map(account => ({
+                        <Pie
+                          data={props.accounts.filter(a => ['student', 'mortgage', 'credit card'].includes(a.subtype)).map(account => ({
                               ...account,
                               current_balance: Math.abs(account.current_balance)
-                              }))}
-                              dataKey="current_balance"
-                              nameKey="subtype"
-                              outerRadius={90}
-                              innerRadius={70}
-                              label={({ current_balance }) =>
-                                  `$ -${current_balance}`
-                              }
-                              stroke="#242424"
-                              cx="50%"
-                              cy="50%"
-                              paddingAngle={5}
-                            >
-                              {props.accounts.filter( a => a.current_balance < 0).map((entry, index) => (
-                                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                              ))}
-                          </Pie>
-                          <Legend
+                          }))}
+                          dataKey="current_balance"
+                          nameKey="subtype"
+                          outerRadius={90}
+                          innerRadius={70}
+                          label={({ current_balance }) => `-${currencyFilter(current_balance)}`}
+                          stroke="#242424"
+                          cx="50%"
+                          cy="50%"
+                          paddingAngle={5}
+                        >
+                          {props.accounts.filter(a => ['student', 'mortgage', 'credit card'].includes(a.subtype)).map((account, index) => (
+                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Legend
                           layout="vertical"
                           align="left"
                           verticalAlign="middle"
-                          />
+                        />
                       </PieChart>
                     </div>
                 </div>
