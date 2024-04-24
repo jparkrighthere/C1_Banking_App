@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
-import { PieChart, Pie, Legend, Cell, LineChart } from 'recharts'; 
+import { PieChart, Pie, Legend, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid} from 'recharts'; 
 import './Asset.css';
 import colors from 'plaid-threads/scss/colors';
+import { useContext, useEffect, useState } from 'react';
+import AuthContext from '../../AuthContext';
 
 const currencyFilter = (amount) => {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
@@ -21,6 +23,41 @@ const COLORS = [
 ];
 
 export default function NetWorth(props) {
+  // transaction data stuff
+  const { authToken } = useContext(AuthContext);
+  const [transactions, setTransactions] = useState([]);
+
+  const fetchTransactions = async () => {
+    const response = await fetch('/api/transactions', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    const data = await response.json();
+    console.log("transaction data obtained");
+    setTransactions(data);
+    console.log(data)
+  }
+
+  useEffect(() => {
+    fetchTransactions();
+    //temp();
+  }, [])
+
+  // line chart data processing
+  const transformedData = transactions.map(transaction => ({
+    date: new Date(transaction.date).toISOString().slice(0,10),
+    amount: transaction.amount,
+  })).sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  const temp = async() => {
+    for (let i = 0; i < transactions.length; i++) {
+      const obj = transactions[i];
+      console.log(obj.category[0]);
+    }
+  }
+
   // sums of account types
   const addAllAccounts = (
     accountSubtypes
@@ -42,6 +79,7 @@ export default function NetWorth(props) {
   const assets = depository + investment;
   const liabilities = loan + credit;
 
+
   return (
     <div>
       <h2 className="netWorthHeading">Net Worth</h2>
@@ -50,14 +88,23 @@ export default function NetWorth(props) {
         <div className="netWorthText">{`Total across ${
             props.numOfItems
             } bank ${pluralize('account', props.numOfItems)}:`}</div>
-            <h2 className="netWorthDollars">
-            {currencyFilter(assets + liabilities)}
-            </h2>
+            <h2 className="netWorthDollars"> {currencyFilter(assets + liabilities)} </h2>
             <hr color='#6a6a6a' className='section-linebr'></hr>
 
-            <div className="widgets-container">
+            <div className='lineChartBox'>
+              <h4 className='lineChartHeader'>Transaction History</h4>
+              <div className='lineChart'>
+              <LineChart width={800} height={400} data={transformedData}>
+                <XAxis dataKey="date"/>
+                <YAxis />
+                <Legend />
+                <Line type="monotone" dataKey="amount" stroke="#34d989"/>
+              </LineChart>
+              </div>
+            </div>
 
-                <div className="userDataBox">
+            <div className="widgets-container">
+                <div className="assetsBox">
                     <div className="holdingsList">
                         <h4 className="holdingsHeading">Assets</h4>
                       <div className="assetsHeaderContainer">
@@ -91,7 +138,7 @@ export default function NetWorth(props) {
                     </div>
                 </div>
                 
-                <div className="userDataBox">
+                <div className="liabilitiesBox">
                     <div className="holdingsList">
                       <h4 className="holdingsHeading">Liabilities</h4>
                       <div className="assetsHeaderContainer">
@@ -129,6 +176,7 @@ export default function NetWorth(props) {
                 </div>
 
             </div>
+
         </>
     </div>
   );

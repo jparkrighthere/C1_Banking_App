@@ -19,6 +19,7 @@ function currencyFilter(value) {
 const AccountPage = () => {
   const { authToken } = useContext(AuthContext);
   const [accounts, setAccounts] = useState([]);
+  // const [transactions, setTransactions] = useState([]);
 
   const fetchAccounts = async () => {
     const response = await fetch('/api/accounts', {
@@ -40,28 +41,16 @@ const AccountPage = () => {
     }
   };
 
-  const fetchTransactions = async () => {
-    const response = await fetch('/api/transactions', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-    });
-    const data = await response.json();
-    // console.log(data);
-  }
-  
 
   useEffect(() => {
     fetchAccounts();
-    fetchTransactions();
+    // fetchTransactions();
   }, []);
 
   return (
     <div>
       <Header />
       <div className='page-container'>
-
         <div>
           <NetWorth
             accounts={accounts}
@@ -70,7 +59,6 @@ const AccountPage = () => {
         </div>
 
         <div>
-        
         <h4 className='account-section'>Accounts</h4>
         <hr className='section-linebr' color='#6a6a6a'></hr>
           {accounts.map((account, index) => (
