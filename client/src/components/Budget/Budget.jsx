@@ -5,11 +5,11 @@ import { sampleTransactions } from './spendingInsightData.js';
 
 export default function Budget() {
   return (
-    <div>
+    <>
       <Header />
       <div className="donut-widget">
         <SpendingInsight transactions={sampleTransactions} numOfItems={1} />
       </div>
-    </div>
+    </>
   );
 }

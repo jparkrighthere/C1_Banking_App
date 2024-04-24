@@ -59,7 +59,7 @@ export default function SpendingInsight(props) {
     }, [namesObject]);
 
     return (
-        <div>
+        <>
             <h2 className="monthlySpendingHeading">Spending Insights</h2>
             <p className="tableSubHeading">An overview of your recent spending</p>
             <div className="monthlySpendingText">{`Overall breakdown across ${props.numOfItems} bank ${pluralize('account', props.numOfItems)}`}</div>
@@ -102,7 +102,7 @@ export default function SpendingInsight(props) {
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 

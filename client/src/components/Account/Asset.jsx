@@ -72,7 +72,7 @@ export default function NetWorth(props) {
 
 
   return (
-    <div>
+    <>
       <h2 className="netWorthHeading">Net Worth</h2>
       <p className='netWorthsubHeading'> A summary of your assets and liabilities </p>
       <>
@@ -169,7 +169,7 @@ export default function NetWorth(props) {
             </div>
 
         </>
-    </div>
+    </>
   );
 }
 
