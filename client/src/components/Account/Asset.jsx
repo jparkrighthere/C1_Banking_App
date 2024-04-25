@@ -74,8 +74,8 @@ export default function NetWorth(props) {
       <>
         <div className="netWorthText">{`Total across ${
             numOfItems
-            } bank ${pluralize('account', numOfItems)}:`}</div>
-            <h2 className="netWorthDollars"> {currencyFilter(assets)} </h2>
+            } financial ${pluralize('account', numOfItems)}:`}</div>
+            <h2 className="netWorthDollars"> {currencyFilter(assets-liabilities)} </h2>
             <hr color='#6a6a6a' className='section-linebr'></hr>
 
             <div className='lineChartBox'>
