@@ -3,60 +3,47 @@ import { DonutChart } from './donutChart';
 import PropTypes from 'prop-types';
 import './SpendingInsight.css';
 import { BarChartComponent } from './barChart';
+import data from './donutChartData';
 
 const currencyFilter = (amount) => {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
 };
 
+/*
 const pluralize = (word, count) => {
     return count === 1 ? word : word + 's';
 };
+*/
 
 export default function SpendingInsight(props) {
     const transactions = props.transactions;
-    const recentTrans = transactions.slice(0, 5);
-    const monthlyTransactions = useMemo(() => {
-        const today = new Date();
-        const oneMonthAgo = new Date(new Date().setDate(today.getDate() - 30));
-        return transactions.filter(tx => {
-            const date = new Date(tx.date);
-            return date > oneMonthAgo &&
-                tx.category !== 'Payment' &&
-                tx.category !== 'Transfer' &&
-                tx.category !== 'Interest';
-        });
-    }, [transactions]);
+    const sortedTransactions = transactions.slice().sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        return dateA - dateB;
+    });
+    const recentTransactions = sortedTransactions.slice(-5); 
 
-    const categoriesData = useMemo(() => {
-        let categoriesObject = {};
-        monthlyTransactions.forEach(tx => {
-            categoriesObject[tx.category] = categoriesObject[tx.category]
-                ? categoriesObject[tx.category] + tx.amount
-                : tx.amount;
-        });
-        return Object.keys(categoriesObject).map(key => ({
-            name: key,
-            value: categoriesObject[key]
-        }));
-    }, [monthlyTransactions]);
-
-    const namesObject = useMemo(() => {
+    // getting amount associated with each vendor
+    const vendorsArray = useMemo(() => {
         let result = {};
-        monthlyTransactions.forEach(tx => {
-            if (tx.name in result) {
-                result[tx.name] += tx.amount;
-            } else {
-                result[tx.name] = tx.amount;
+        transactions.forEach(tx => {
+            if (tx.merchant_name != null) {
+                if (tx.merchant_name in result) {
+                    result[tx.merchant_name] += tx.amount;
+                } else {
+                    result[tx.merchant_name] = tx.amount;
+                }
             }
         });
         return result;
-    }, [monthlyTransactions]);
+    }, [transactions]);
 
-    const sortedNames = useMemo(() => {
-        let namesArray = Object.entries(namesObject).sort((a, b) => b[1] - a[1]);
-        namesArray.splice(5); // top 5
+    const topVendors = useMemo(() => {
+        let namesArray = Object.entries(vendorsArray).sort((a, b) => b[1] - a[1]);
+        namesArray.splice(3); // top 3
         return namesArray;
-    }, [namesObject]);
+    }, [vendorsArray]);
 
     return (
         <>
@@ -66,7 +53,7 @@ export default function SpendingInsight(props) {
             <hr color='#6a6a6a' className='widget-linebr'></hr>
             
             <div>
-                <div className='secondRow'>
+                <div className='row'>
                     <div className="barChartBox">
                         <div className="holdingsList">
                             <h4 className="holdingsHeading">Cash-In and Cash-Out</h4>
@@ -78,12 +65,17 @@ export default function SpendingInsight(props) {
                         <div className="holdingsList">
                             <h4 className="holdingsHeading">Recent Transactions</h4>
                             <div className="spendingInsightData">
-                                <p className="title">Vendor</p> <p className="title">Date</p>
-                                {recentTrans.map(tx => (
-                                    <React.Fragment key={tx.name}>
-                                        <p>{tx.name}</p>
-                                        <p>{tx.date}</p>
-                                    </React.Fragment>
+                                {/*<p className="title">Vendor</p> <p className="title">Date</p> */}
+                                {recentTransactions.map(tx => (
+                                    <div key={tx.name} className='transactionRow'>
+                                        <div className='leftColumn'>
+                                            <p>{tx.name}</p>
+                                            <p className='date'>{new Date(tx.date).toISOString().slice(0,10)}</p>
+                                        </div>
+                                        <div className='rightColumn'>
+                                            <p>{currencyFilter(tx.amount)}</p>
+                                        </div>
+                                    </div>
                                 ))}
                             </div>
                         </div>
@@ -93,21 +85,25 @@ export default function SpendingInsight(props) {
                 <p className='tableSubHeading'>Spending Details</p>
                 <hr color='#6a6a6a' className='widget-linebr'></hr>
 
-                <div className='firstRow'>
+                <div className='row'>
                     <div className="donutChartBox">
-                        <DonutChart data={categoriesData} />
+                        <DonutChart data={data} />
                     </div>
 
                     <div className="vendorsBox">
                         <div className="holdingsList">
                             <h4 className="holdingsHeading">Top Places</h4>
                             <div className="spendingInsightData">
-                                <p className="title">Vendor</p> <p className="title">Amount</p>
-                                {sortedNames.map(([vendor, amount]) => (
-                                    <React.Fragment key={vendor}>
-                                        <p>{vendor}</p>
-                                        <p>{currencyFilter(amount)}</p>
-                                    </React.Fragment>
+                                {/*<p className="title">Vendor</p> <p className="title">Amount</p>*/}
+                                {topVendors.map(([vendor, amount], index) => (
+                                    <div key={vendor} className='transactionRow'>
+                                        <div className='altLeftColumn'>
+                                            <p>{`${index + 1}. ${vendor}`}</p>
+                                        </div>
+                                        <div className='rightColumn'>
+                                            <p>{currencyFilter(amount)}</p>
+                                        </div>
+                                    </div>
                                 ))}
                             </div>
                         </div>
