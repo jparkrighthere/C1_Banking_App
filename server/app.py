@@ -4,7 +4,7 @@ import plaid
 import os
 import bcrypt # for password hashing
 import certifi
-from datetime import datetime, date, timedelta
+from datetime import timedelta
 from bson import ObjectId
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
@@ -17,14 +17,10 @@ from plaid.model.country_code import CountryCode
 from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchangeRequest
 from plaid.model.link_token_create_request_user import LinkTokenCreateRequestUser
 from plaid.model.link_token_create_request import LinkTokenCreateRequest
-from plaid.model.identity_get_request import IdentityGetRequest
-from plaid.model.transactions_get_request import TransactionsGetRequest
 from plaid.model.transactions_sync_request import TransactionsSyncRequest
 from plaid.model.accounts_get_request import AccountsGetRequest
 from plaid.model.products import Products
-from plaid.model.liabilities_get_request import LiabilitiesGetRequest
 from plaid.api import plaid_api
-
 
 load_dotenv()
 
@@ -55,13 +51,11 @@ configuration = plaid.Configuration(
 )
 
 api_client = plaid.ApiClient(configuration)
-
 plaid_client = plaid_api.PlaidApi(api_client)
 
 products = []
 for product in PLAID_PRODUCTS:
     products.append(Products(product))
-
 
 mongo_client = MongoClient(mongo_uri, tlsCAFile=certifi.where())
 
@@ -122,11 +116,8 @@ def register():
             "connected_accounts": []
         }
         users.insert_one(new_user)
-        # Store the user object in the database
-       
         user_id = str(users.find_one({"name": username})["_id"]) # Get the id of the user
 
-    
     if user_id!=None:
         token = create_access_token(identity=user_id)
         return jsonify(message="User registration successful", access_token=token), 200
@@ -206,29 +197,6 @@ def get_accounts():
     except plaid.ApiException as e:
         return jsonify(e)
     
-
-@app.route('/api/liabilities', methods=['GET'])
-@jwt_required()
-def get_liabilities():
-    user_id = get_jwt_identity()
-    try:
-        user = users.find_one({'_id': ObjectId(user_id)})
-        if user:
-            accounts = user.get('connected_accounts', [])
-            liabilities_data = []
-            for item in accounts:
-                access_token_item = connected_accounts.find_one(
-                    {'_id': item}).get("access-token")
-
-                request = LiabilitiesGetRequest(access_token=access_token_item)
-                response = plaid_client.liabilities_get(request)
-                liabilities = response['liabilities']
-                liabilities_data.append(liabilities.to_dict())
-        return jsonify(liabilities_data)
-    except plaid.ApiException as e:
-        return jsonify(e)
-    
-
 @app.route('/api/identity', methods=['GET'])
 @jwt_required()
 def get_identity():
@@ -237,7 +205,6 @@ def get_identity():
     user_name = user["name"]
     
     return jsonify({'identity': user_name})
-
 
 @app.route('/api/transactions', methods=['GET'])
 @jwt_required()
@@ -271,19 +238,11 @@ def get_transactions():
                     has_more = response['has_more']
                     # Update cursor to the next cursor
                     cursor = response['next_cursor']
-                    print(json.dumps(response, indent=2, sort_keys=True, default=str))
                 # Sort and select the 10 most recent transactions
                 transactions_data.extend(sorted(added, key=lambda t: t['date'])[-10:])
         return jsonify(transactions_data)
     except plaid.ApiException as e:
         return jsonify(e)
-
-#Delete ltr
-def format_error(e):
-    response = json.loads(e.body)
-    return {'error': {'status_code': e.status, 'display_message':
-                      response['error_message'], 'error_code': response['error_code'], 'error_type': response['error_type']}}
-
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
