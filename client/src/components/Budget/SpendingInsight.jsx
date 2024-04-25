@@ -33,6 +33,14 @@ export default function SpendingInsight(props) {
                 } else {
                     result[tx.merchant_name] = tx.amount;
                 }
+            } else if (tx.category[0] !== "Payment" && tx.category[0] !== "Transfer" && tx.category[0] !== "Payroll") {
+                if (tx.name != null) {
+                    if (tx.name in result) {
+                        result[tx.name] += tx.amount;
+                    } else {
+                        result[tx.name] = tx.amount;
+                    }
+                }
             }
         });
         return result;
