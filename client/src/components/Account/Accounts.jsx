@@ -82,7 +82,7 @@ const AccountPage = () => {
             <div key={index} className="account-data-row">
               <div className="account-data-row__left">
                 <img
-                  src="/Images/logo2.png"
+                  src="/Images/logo.png"
                   alt="Capital One Logo"
                   className="logo"
                 />

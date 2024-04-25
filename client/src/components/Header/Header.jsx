@@ -40,7 +40,7 @@ const Header = () => {
 
   return (
     <header className={`header ${isScrolled ? 'shadow' : ''}`}>
-      <img src="/Images/logo2.png" alt="Capital One Logo" className="c1-logo" />
+      <img src="/Images/logo.png" alt="Capital One Logo" className="c1-logo" />
       <nav className="navigation">
         <Link to="/budget" className="nav-link">
           Budgeting
@@ -59,11 +59,13 @@ const Header = () => {
         </Link>
       </nav>
       <div className="profile-info">
+        {
         <img
           src="/Images/profile.jpg"
           alt="Profile"
           className="profile-image"
         />
+        }
         <span className="user-name">{user || ''}</span>
       </div>
     </header>

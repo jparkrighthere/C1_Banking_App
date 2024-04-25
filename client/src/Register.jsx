@@ -70,7 +70,7 @@ const Register = () => {
     }}>
         <div className="form-container">
         <form className="form">
-        <img src="/Images/logo2.png" alt="Capital One Logo" className="formLogo"/>
+        <img src="/Images/logo.png" alt="Capital One Logo" className="formLogo"/>
             <h2> Create an Account </h2>
             <div className="input-container">
                 <label>Username: </label>
