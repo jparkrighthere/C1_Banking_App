@@ -1,9 +1,8 @@
+/* eslint-disable react/prop-types */
 import PropTypes from 'prop-types';
 import { PieChart, Pie, Legend, Cell, LineChart, Line, XAxis, YAxis} from 'recharts'; 
 import './Asset.css';
 import colors from 'plaid-threads/scss/colors';
-import { useContext, useEffect, useState } from 'react';
-import AuthContext from '../../AuthContext';
 
 function currencyFilter(value) {
 
@@ -38,25 +37,7 @@ const COLORS = [
 
 export default function NetWorth(props) {
   // transaction data stuff
-  const { authToken } = useContext(AuthContext);
-  const [transactions, setTransactions] = useState([]);
-
-  const fetchTransactions = async () => {
-    const response = await fetch('/api/transactions', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-    });
-    const data = await response.json();
-    console.log("transaction data obtained");
-    console.log(data);
-    setTransactions(data);
-  }
-
-  useEffect(() => {
-    fetchTransactions();
-  }, [])
+  const {accounts, transactions, numOfItems} = props
 
   // line chart data processing
   const transformedData = transactions.map(transaction => ({
@@ -68,7 +49,7 @@ export default function NetWorth(props) {
   const addAllAccounts = (
     accountSubtypes
   ) =>
-    props.accounts
+    accounts
       .filter(a => accountSubtypes.includes(a.subtype))
       .reduce((acc, val) => acc + val.current_balance, 0);
 
@@ -92,8 +73,8 @@ export default function NetWorth(props) {
       <p className='netWorthsubHeading'> A summary of your assets and liabilities </p>
       <>
         <div className="netWorthText">{`Total across ${
-            props.numOfItems
-            } bank ${pluralize('account', props.numOfItems)}:`}</div>
+            numOfItems
+            } bank ${pluralize('account', numOfItems)}:`}</div>
             <h2 className="netWorthDollars"> {currencyFilter(assets)} </h2>
             <hr color='#6a6a6a' className='section-linebr'></hr>
 
@@ -118,7 +99,7 @@ export default function NetWorth(props) {
                       </div>
                       <PieChart width={500} height={300}>
                         <Pie
-                          data={props.accounts.filter(a => ['checking', 'savings', 'cd', 'money market', 'ira', '401k'].includes(a.subtype))}
+                          data={accounts.filter(a => ['checking', 'savings', 'cd', 'money market', 'ira', '401k'].includes(a.subtype))}
                           dataKey="current_balance"
                           nameKey="subtype"
                           outerRadius={90}
@@ -129,7 +110,7 @@ export default function NetWorth(props) {
                           cy="50%"
                           paddingAngle={5}
                         >
-                          {props.accounts.filter(a => ['checking', 'savings', 'cd', 'money market', 'ira', '401k'].includes(a.subtype)).map((account, index) => (
+                          {accounts.filter(a => ['checking', 'savings', 'cd', 'money market', 'ira', '401k'].includes(a.subtype)).map((account, index) => (
                               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                           ))}
                         </Pie>
@@ -150,7 +131,7 @@ export default function NetWorth(props) {
                       </div>
                       <PieChart width={500} height={300}>
                         <Pie
-                          data={props.accounts.filter(a => ['student', 'mortgage', 'credit card'].includes(a.subtype)).map(account => ({
+                          data={accounts.filter(a => ['student', 'mortgage', 'credit card'].includes(a.subtype)).map(account => ({
                               ...account,
                               current_balance: Math.abs(account.current_balance)
                           }))}
@@ -164,7 +145,7 @@ export default function NetWorth(props) {
                           cy="50%"
                           paddingAngle={5}
                         >
-                          {props.accounts.filter(a => ['student', 'mortgage', 'credit card'].includes(a.subtype)).map((account, index) => (
+                          {accounts.filter(a => ['student', 'mortgage', 'credit card'].includes(a.subtype)).map((account, index) => (
                               <Cell key={`cell-${index}`} fill={colors_list[index % colors_list.length]} />
                           ))}
                         </Pie>

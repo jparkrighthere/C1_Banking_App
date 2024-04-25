@@ -43,7 +43,6 @@ const SignIn = () => {
         const responseData = await response.json();
         const { access_token } = responseData;
         localStorage.setItem('access_token', access_token);
-        console.log('Login successful. Access token:', access_token);
         login(access_token);
         navigate("/");
     } catch (error) {
