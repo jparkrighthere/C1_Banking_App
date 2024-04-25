@@ -81,23 +81,23 @@ const AccountPage = () => {
             fetchTransactions={fetchTransactions}
           />
         </div>
-        <hr className="section-linebr" color="#6a6a6a"></hr>
-        {accounts.map((account, index) => (
-          <div key={index} className="account-data-row">
-            <div className="account-data-row__left">
-              <img
-                src="/Images/logo2.png"
-                alt="Capital One Logo"
-                className="logo"
-              />
-              <div className="account-data-row__name">
-                {account.accountName} Account
+        <hr className='section-linebr' color='#6a6a6a'></hr>
+          {accounts.map((account, index) => (
+            <div key={index} className="account-data-row">
+              <div className="account-data-row__left">
+                <img
+                  src="/Images/logo.png"
+                  alt="Capital One Logo"
+                  className="logo"
+                />
+                <div className="account-data-row__name">
+                  {account.accountName} Account
+                </div>
               </div>
-            </div>
-            <div className="account-data-row__balance">
-              {`${startCase(toLower(account.subtype))} • ${currencyFilter(
-                account.current_balance
-              )}`}
+              <div className="account-data-row__balance">
+                {`${startCase(toLower(account.subtype))} • ${currencyFilter(
+                  account.current_balance
+                )}`}
             </div>
           </div>
         ))}

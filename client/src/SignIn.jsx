@@ -63,7 +63,7 @@ const SignIn = () => {
         <div className="form-container">
         
         <form className="form" onSubmit={handleSignIn}>
-        <img src="/Images/logo2.png" alt="Capital One Logo" className="formLogo"/>
+        <img src="/Images/logo.png" alt="Capital One Logo" className="formLogo"/>
             <h2>Sign In</h2>
             <div className="input-container">
                 <label>Username: </label>
