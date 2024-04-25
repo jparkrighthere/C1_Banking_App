@@ -53,31 +53,50 @@ const SignIn = () => {
   };
 
   return (
-    <div style={{
+    <div
+      style={{
         position: 'absolute',
         left: '50%',
         top: '45%',
-        transform: 'translate(-50%, -50%)'
-    }}>
-        
-        <div className="form-container">
-        
+        transform: 'translate(-50%, -50%)',
+      }}
+    >
+      <div className="form-container">
         <form className="form" onSubmit={handleSignIn}>
-        <img src="/Images/logo.png" alt="Capital One Logo" className="formLogo"/>
-            <h2>Sign In</h2>
-            <div className="input-container">
-                <label>Username: </label>
-                <input placeholder="Username" className={'inputBox'} type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-            </div>
-            <div className="input-container">
-                <label>Password: </label>
-                <input placeholder="Password" className={'inputBox'} type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            </div>
-            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-            <button type="submit">Sign In</button>
+          <img
+            src="/Images/logo.png"
+            alt="Capital One Logo"
+            className="formLogo"
+          />
+          <h2>Budget & Expense Manager</h2>
+          <h2>Sign In</h2>
+          <div className="input-container">
+            <label>Username: </label>
+            <input
+              placeholder="Username"
+              className={'inputBox'}
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+          <div className="input-container">
+            <label>Password: </label>
+            <input
+              placeholder="Password"
+              className={'inputBox'}
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+          <button type="submit">Sign In</button>
         </form>
-        <p className="pageNav">Don&apos;t have an account? <Link to="/register">Register Here</Link></p>
-        </div>
+        <p className="pageNav">
+          Don&apos;t have an account? <Link to="/register">Register Here</Link>
+        </p>
+      </div>
     </div>
   );
 };
