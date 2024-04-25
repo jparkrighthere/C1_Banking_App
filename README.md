@@ -66,8 +66,8 @@ Our backend server is made using the Flask framework. In it, we connect to our m
 ### Frontend Client
 Our frontend is made with ReactJS, React Router, and ReChart for data visualization. Our client has 3 pages, signin, register, accounts, budgeting. The routes are protected, meaning you will not be able to access accounts and budgeting unless you are signed in. The accounts and budgeting page are composed of multiple widgets, each displaying its own information about the users financial data. Each widget makes the call to our backend server using HTTP and providing the user JSON web token.
 
-### What works & what doesn’t
+## 3. What works & what doesn’t
 Our application fully works in that everything displays what it is supposed to and is secure. There are a few bugs in it that are a bit annoying, such as when the user refreshes the page the client forgets that they are signed in. Our app is also not responsive so if they user is on mobile they would not see a smooth UI. 
 
-### What would you work on next
+## 4. What would you work on next
 What we would work on next is supporting more financial information and expanding the user capabilities. The plaid API is able to retrieve much more information that we didn't have time to implement such as mortgage information, income/payroll, and investments/assets. If we had more time for this project we would implement more routes and integration to support these categories. We would also allow the user to set budgeting limits. Our app only displays their spending habits, but in the future we could allow them to interact more with the app by setting budgeting features.
