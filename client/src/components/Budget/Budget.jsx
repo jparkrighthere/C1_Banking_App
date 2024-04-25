@@ -1,6 +1,5 @@
 import Header from "../Header/Header";
 import SpendingInsight from "./SpendingInsight";
-import { sampleTransactions } from './spendingInsightData.js';
 import { useContext, useEffect, useState } from 'react';
 import AuthContext from '../../AuthContext';
 
@@ -17,7 +16,6 @@ export default function Budget() {
       },
     });
     const data = await response.json();
-    console.log("budget transactions obtained");
     setTransactions(data);
   }
 

@@ -3,7 +3,6 @@ import { DonutChart } from './donutChart';
 import PropTypes from 'prop-types';
 import './SpendingInsight.css';
 import { BarChartComponent } from './barChart';
-import data from './donutChartData';
 
 const currencyFilter = (amount) => {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
@@ -87,7 +86,7 @@ export default function SpendingInsight(props) {
 
                 <div className='row'>
                     <div className="donutChartBox">
-                        <DonutChart data={data} />
+                        <DonutChart data={transactions} />
                     </div>
 
                     <div className="vendorsBox">

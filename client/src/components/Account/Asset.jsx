@@ -18,6 +18,15 @@ const pluralize = (word, count) => {
     return count === 1 ? word : word + 's';
 };
 
+  const colors_list = [
+    "#0074D9", // Bright blue
+    "#4192D9", // Lighter blue
+    "#6BC2E9", // Even lighter blue
+    "#8ED5F0", // Pale blue
+    "#B2E0F5", // Very pale blue
+    "#D9F0FC", // Almost white blue
+  ];
+
 const COLORS = [
   colors.yellow900,
   colors.red900,
@@ -156,7 +165,7 @@ export default function NetWorth(props) {
                           paddingAngle={5}
                         >
                           {props.accounts.filter(a => ['student', 'mortgage', 'credit card'].includes(a.subtype)).map((account, index) => (
-                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                              <Cell key={`cell-${index}`} fill={colors_list[index % colors_list.length]} />
                           ))}
                         </Pie>
                         <Legend
