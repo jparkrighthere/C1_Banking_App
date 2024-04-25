@@ -15,11 +15,11 @@
 
 a {
   font-weight: 500;
-  color: #02c3d1;
+  color: #3eafcf;
   text-decoration: inherit;
 }
 a:hover {
-  color: #21f0ff;
+  color: #46c3e6;
 }
 
 body {
@@ -47,7 +47,7 @@ button {
   margin-top: 1%;
 }
 button:hover {
-  border-color: #21f0ff;
+  border-color: #46c3e6;
 }
 button:focus,
 button:focus-visible {
