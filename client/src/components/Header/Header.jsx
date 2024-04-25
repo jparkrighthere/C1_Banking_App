@@ -8,6 +8,8 @@ const Header = () => {
   const { authToken } = useContext(AuthContext);
   const [user, setUser] = useState(null);
 
+  const [isScrolled, setIsScrolled] = useState(false);
+
   useEffect(() => {
     fetch('/api/identity', {
       method: 'GET',
@@ -18,10 +20,26 @@ const Header = () => {
     })
       .then((res) => res.json())
       .then((data) => setUser(data['identity']));
+
+      const handleScroll = () => {
+        if (window.scrollY > 0) {
+          setIsScrolled(true);
+        } else {
+          setIsScrolled(false);
+        }
+      };
+  
+      window.addEventListener('scroll', handleScroll);
+  
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
   }, []);
 
+
+
   return (
-    <header className="header">
+    <header className={`header ${isScrolled ? 'shadow' : ''}`}>
       <img src="/Images/logo2.png" alt="Capital One Logo" className="c1-logo" />
       <nav className="navigation">
         <Link to="/budget" className="nav-link">

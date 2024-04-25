@@ -14,8 +14,8 @@ export const BarChartComponent = () => {
             <BarChart width={400} height={250} data={data}>
                 <YAxis />
                 <Legend />
-                <Bar dataKey="cash-in" fill="#8884d8" />
-                <Bar dataKey="cash-out" fill="#82ca9d" />
+                <Bar dataKey="cash-in" fill="#92d4b9" />
+                <Bar dataKey="cash-out" fill="#a5cbf8" />
             </BarChart>
             </div>
 
