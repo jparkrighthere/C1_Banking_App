@@ -19,6 +19,7 @@ function currencyFilter(value) {
 const AccountPage = () => {
   const { authToken } = useContext(AuthContext);
   const [accounts, setAccounts] = useState([]);
+  const [transactions, setTransactions] = useState([]);
 
     useEffect(() => {
       fetchAccounts();
@@ -43,7 +44,6 @@ const AccountPage = () => {
           current_balance: account.balances.current
         }))
       );
-       console.log(data);
       setAccounts(accountsData);
     }
   };
@@ -63,6 +63,7 @@ const AccountPage = () => {
       return acc;
     }, 0);
     localStorage.setItem('cash-out', cashout);
+    setTransactions(data);
   }
   
   return (
@@ -70,12 +71,15 @@ const AccountPage = () => {
       <Header />
       <div className="page-container">
         <div>
-          <NetWorth accounts={accounts} numOfItems={accounts.length} />
+          <NetWorth accounts={accounts} numOfItems={accounts.length} fetchTransactions={fetchTransactions} transactions={transactions} />
         </div>
 
-        <div className='account-header'>
-          <h3 className='account-section'>Accounts</h3>
-          <LinkToken fetchAccounts={fetchAccounts} /> 
+        <div className="account-header">
+          <h3 className="account-section">Accounts</h3>
+          <LinkToken
+            fetchAccounts={fetchAccounts}
+            fetchTransactions={fetchTransactions}
+          />
         </div>
         <hr className='section-linebr' color='#6a6a6a'></hr>
           {accounts.map((account, index) => (
@@ -94,9 +98,9 @@ const AccountPage = () => {
                 {`${startCase(toLower(account.subtype))} • ${currencyFilter(
                   account.current_balance
                 )}`}
-              </div>
             </div>
-          ))}
+          </div>
+        ))}
       </div>
     </>
   );

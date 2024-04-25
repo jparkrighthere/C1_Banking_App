@@ -5,9 +5,8 @@ import AuthContext from './AuthContext';
 
 const LinkToken = (props) => {
   const [linkToken, setToken] = useState(null);
-  const [testAccounts, setTestAccounts] = useState([]);
   const { authToken } = useContext(AuthContext);
-  const { fetchAccounts } = props;
+  const { fetchAccounts, fetchTransactions } = props;
   // Set access token
   const onSuccess = useCallback(async (publicToken) => {
     const response = await fetch('/api/set_access_token', {
@@ -20,6 +19,7 @@ const LinkToken = (props) => {
       body: JSON.stringify({ public_token: publicToken }),
     });
     fetchAccounts();
+    fetchTransactions()
   }, []);
 
   // Creates a Link token
@@ -72,31 +72,6 @@ const LinkToken = (props) => {
       <button onClick={() => open()} disabled={!ready}>
         <strong>Link Account</strong>
       </button>
-      {/* <button
-        onClick={() =>
-          fetch('/api/liabilities', {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${authToken}`,
-            },
-          })
-            .then((res) => res.json())
-            .then((data) => {
-              console.log(data);
-              setTestAccounts(data);
-            })
-        }
-      >
-        <strong>Test</strong>
-      </button>
-      <div>
-        {testAccounts.map((account, index) => (
-          <div key={index}>
-            <pre>{JSON.stringify(account, null, 2)}</pre>
-          </div>
-        ))}
-      </div> */}
     </div>
   );
 };
