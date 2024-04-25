@@ -21,7 +21,7 @@ export default function SpendingInsight(props) {
         const dateB = new Date(b.date);
         return dateA - dateB;
     });
-    const recentTransactions = sortedTransactions.slice(-5); 
+    const recentTransactions = sortedTransactions.slice(-5).reverse(); 
 
     // getting amount associated with each vendor
     const vendorsArray = useMemo(() => {
