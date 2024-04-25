@@ -2,6 +2,11 @@
     margin-left: 5%;
 }
 
+.barChart {
+    margin-left: -5%;
+    margin-top: 10%;
+}
+
 .widget-header {
     margin-top: 33px;
     margin-bottom: 0px;
