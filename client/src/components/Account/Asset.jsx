@@ -65,7 +65,7 @@ export default function NetWorth(props) {
 
   const assets = depository + investment;
   localStorage.setItem('cash-in', assets);
-  const liabilities = loan + credit;
+  const liabilities = -(loan + credit);
 
   return (
     <>
@@ -75,7 +75,7 @@ export default function NetWorth(props) {
         <div className="netWorthText">{`Total across ${
             numOfItems
             } financial ${pluralize('account', numOfItems)}:`}</div>
-            <h2 className="netWorthDollars"> {currencyFilter(assets-liabilities)} </h2>
+            <h2 className="netWorthDollars"> {currencyFilter(assets+liabilities)} </h2>
             <hr color='#6a6a6a' className='section-linebr'></hr>
 
             <div className='lineChartBox'>
@@ -127,7 +127,7 @@ export default function NetWorth(props) {
                     <div className="holdingsList">
                       <h4 className="holdingsHeading">Liabilities</h4>
                       <div className="assetsHeaderContainer">
-                        <h4 className="dollarsHeading">-{currencyFilter(liabilities)}</h4>
+                        <h4 className="dollarsHeading">{currencyFilter(liabilities)}</h4>
                       </div>
                       <PieChart width={500} height={300}>
                         <Pie
