@@ -57,6 +57,7 @@ products = []
 for product in PLAID_PRODUCTS:
     products.append(Products(product))
 
+
 mongo_client = MongoClient(mongo_uri, tlsCAFile=certifi.where())
 
 try:
