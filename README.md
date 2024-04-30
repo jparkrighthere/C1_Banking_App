@@ -66,6 +66,11 @@ Our backend server is made using the Flask framework. In it, we connect to our m
 ### Frontend Client
 Our frontend is made with ReactJS, React Router, and ReChart for data visualization. Our client has 3 pages, signin, register, accounts, budgeting. The routes are protected, meaning you will not be able to access accounts and budgeting unless you are signed in. The accounts and budgeting page are composed of multiple widgets, each displaying its own information about the users financial data. Each widget makes the call to our backend server using HTTP and providing the user JSON web token.
 
+![1714451939905-16554aa5-42c5-49bd-834b-bfd4b90682c2_2](https://github.com/jparkrighthere/C1_Banking_App/assets/116504082/073d6701-5d5f-4be9-8934-a9ca92fd0fe2)
+![1714451939905-16554aa5-42c5-49bd-834b-bfd4b90682c2_3](https://github.com/jparkrighthere/C1_Banking_App/assets/116504082/a1805b47-6565-4579-ba7d-ab12b1d44c44)
+![1714451939905-16554aa5-42c5-49bd-834b-bfd4b90682c2_7](https://github.com/jparkrighthere/C1_Banking_App/assets/116504082/eb652274-46d6-4835-8ffc-d40768da1cfb)
+
+
 ## 3. What works & what doesn’t
 Our application fully works in that everything displays what it is supposed to and is secure. There are a few bugs in it that are a bit annoying, such as when the user refreshes the page the client forgets that they are signed in. Our app is also not responsive so if they user is on mobile they would not see a smooth UI. 
 
